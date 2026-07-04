@@ -1,11 +1,15 @@
-# Thailand Concert Calendar
+# Concert Calendar Website
 
-เว็บรวมคอนเสิร์ตในไทย แยกตามประเภท ศิลปิน/งาน เดือน และเว็บขายบัตร พร้อมลิงก์อ้างอิงกลับไปยังหน้ารายละเอียดจริงของแต่ละงาน
+เว็บรวมคอนเสิร์ตในไทย แยกตามประเภท เดือน และเว็บขายบัตร พร้อมรูปปก ราคา วันขายบัตร วันจัดงาน และลิงก์อ้างอิงกลับไปยังหน้ารายละเอียดจริงของแต่ละงาน
 
 ## เปิดใช้งาน
 
-เปิด `index.html` หรือเข้า `outputs/concerts-thailand.html` โดยตรง
+หน้าเว็บหลักคือ `index.html`
+
+ถ้าเปิด GitHub Pages แล้ว เว็บจะอยู่ที่:
+
+https://nukk33.github.io/concert-calendar-website/
 
 ## ข้อมูล
 
-ข้อมูลหลักอยู่ที่ `outputs/concert-board-api/real-events.json` และหน้าเว็บหลักอยู่ที่ `outputs/concerts-thailand.html`
+ข้อมูลคอนเสิร์ตถูกแบ่งไว้ใน `data/real-events-01.jsonpart` ถึง `data/real-events-04.jsonpart` แล้วหน้าเว็บจะโหลดมาต่อกันอัตโนมัติ
