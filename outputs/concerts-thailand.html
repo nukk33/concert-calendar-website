@@ -1,0 +1,3391 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Thailand Concert Board</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #17191f;
+      --muted: #6b7280;
+      --line: #dde2ea;
+      --paper: #f7f8fb;
+      --panel: #ffffff;
+      --teal: #0f766e;
+      --coral: #c2410c;
+      --violet: #6d28d9;
+      --amber: #b45309;
+      --blue: #2563eb;
+      --rose: #be123c;
+      --shadow: 0 16px 40px rgba(24, 32, 46, .10);
+      --radius: 8px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--paper);
+      color: var(--ink);
+      letter-spacing: 0;
+    }
+
+    button,
+    input,
+    select {
+      font: inherit;
+    }
+
+    .app {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 280px minmax(0, 1fr);
+    }
+
+    aside {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      padding: 24px 18px;
+      background: #111827;
+      color: #f8fafc;
+      overflow-y: auto;
+    }
+
+    .brand {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 26px;
+    }
+
+    .mark {
+      width: 42px;
+      height: 42px;
+      border-radius: 8px;
+      display: grid;
+      place-items: center;
+      background:
+        linear-gradient(135deg, rgba(255,255,255,.22), transparent 54%),
+        conic-gradient(from 210deg, #14b8a6, #f97316, #e11d48, #2563eb, #14b8a6);
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,.18);
+    }
+
+    .mark svg {
+      width: 24px;
+      height: 24px;
+      fill: none;
+      stroke: #fff;
+      stroke-width: 2.2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .brand h1 {
+      margin: 0;
+      font-size: 18px;
+      line-height: 1.25;
+      font-weight: 760;
+    }
+
+    .brand p {
+      margin: 3px 0 0;
+      color: #bac2d0;
+      font-size: 12px;
+    }
+
+    .side-section {
+      padding: 16px 0;
+      border-top: 1px solid rgba(255,255,255,.12);
+    }
+
+    .side-section h2 {
+      margin: 0 0 10px;
+      color: #dbe4f0;
+      font-size: 12px;
+      font-weight: 720;
+      text-transform: uppercase;
+    }
+
+    .stat-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .stat {
+      min-height: 76px;
+      padding: 12px;
+      border-radius: var(--radius);
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.10);
+    }
+
+    .stat strong {
+      display: block;
+      font-size: 25px;
+      line-height: 1;
+    }
+
+    .stat span {
+      display: block;
+      margin-top: 8px;
+      color: #bdc7d5;
+      font-size: 12px;
+      line-height: 1.35;
+    }
+
+    .source-list {
+      display: grid;
+      gap: 8px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .source-list li {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 10px;
+      border-radius: var(--radius);
+      color: #e7ecf4;
+      background: rgba(255,255,255,.06);
+    }
+
+    .source-list span {
+      color: #aeb8c8;
+      font-size: 12px;
+    }
+
+    main {
+      min-width: 0;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      display: grid;
+      grid-template-columns: minmax(260px, 680px);
+      gap: 16px;
+      align-items: center;
+      padding: 18px 28px;
+      background: rgba(247,248,251,.86);
+      backdrop-filter: blur(18px);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .search {
+      display: grid;
+      grid-template-columns: 22px 1fr;
+      gap: 10px;
+      align-items: center;
+      max-width: 680px;
+      padding: 11px 14px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--panel);
+      box-shadow: 0 1px 0 rgba(0,0,0,.02);
+    }
+
+    .search svg {
+      width: 20px;
+      height: 20px;
+      stroke: #64748b;
+      stroke-width: 2;
+      fill: none;
+    }
+
+    .search input {
+      width: 100%;
+      min-width: 0;
+      border: 0;
+      outline: 0;
+      background: transparent;
+      color: var(--ink);
+    }
+
+    .content {
+      padding: 26px 28px 46px;
+    }
+
+    .hero-strip {
+      min-height: 220px;
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(280px, .9fr);
+      gap: 24px;
+      align-items: stretch;
+      margin-bottom: 22px;
+    }
+
+    .intro {
+      padding: 26px;
+      border-radius: var(--radius);
+      background:
+        linear-gradient(135deg, rgba(20,184,166,.16), transparent 45%),
+        linear-gradient(35deg, rgba(249,115,22,.15), transparent 45%),
+        #fff;
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+    }
+
+    .intro h2 {
+      max-width: 720px;
+      margin: 0;
+      font-size: clamp(28px, 4vw, 52px);
+      line-height: 1.02;
+      font-weight: 820;
+      letter-spacing: 0;
+    }
+
+    .intro p {
+      max-width: 660px;
+      margin: 14px 0 0;
+      color: #4b5563;
+      font-size: 16px;
+      line-height: 1.7;
+    }
+
+    .spotlight {
+      position: relative;
+      min-height: 220px;
+      overflow: hidden;
+      border-radius: var(--radius);
+      background: #0b1220;
+      box-shadow: var(--shadow);
+    }
+
+    .hero-covers {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 0;
+    }
+
+    .hero-cover {
+      position: relative;
+      min-width: 0;
+      overflow: hidden;
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .hero-cover img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      filter: saturate(1.05) contrast(1.02);
+    }
+
+    .hero-cover:after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(2,6,23,.68), rgba(2,6,23,.06) 62%);
+    }
+
+    .hero-cover:focus-visible {
+      outline: 3px solid rgba(255,255,255,.75);
+      outline-offset: -5px;
+      z-index: 2;
+    }
+
+    .stage-art {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 20% 20%, rgba(250,204,21,.65), transparent 18%),
+        radial-gradient(circle at 80% 18%, rgba(14,165,233,.62), transparent 18%),
+        linear-gradient(160deg, rgba(225,29,72,.68), transparent 42%),
+        linear-gradient(28deg, rgba(20,184,166,.72), transparent 52%),
+        #111827;
+    }
+
+    .beam {
+      position: absolute;
+      top: -24px;
+      width: 34%;
+      height: 145%;
+      transform-origin: top;
+      opacity: .58;
+      filter: blur(.4px);
+      background: linear-gradient(to bottom, rgba(255,255,255,.66), rgba(255,255,255,0));
+      clip-path: polygon(42% 0, 58% 0, 100% 100%, 0 100%);
+    }
+
+    .beam.one { left: 4%; transform: rotate(-16deg); }
+    .beam.two { right: 6%; transform: rotate(17deg); }
+
+    .crowd {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 64px;
+      background:
+        radial-gradient(circle at 8% 88%, #030712 0 9px, transparent 10px),
+        radial-gradient(circle at 18% 80%, #030712 0 12px, transparent 13px),
+        radial-gradient(circle at 30% 90%, #030712 0 10px, transparent 11px),
+        radial-gradient(circle at 45% 78%, #030712 0 13px, transparent 14px),
+        radial-gradient(circle at 60% 89%, #030712 0 11px, transparent 12px),
+        radial-gradient(circle at 74% 82%, #030712 0 13px, transparent 14px),
+        radial-gradient(circle at 88% 90%, #030712 0 10px, transparent 11px),
+        linear-gradient(to top, #020617 0 42px, transparent 43px);
+    }
+
+    .spotlight-label {
+      position: absolute;
+      left: 20px;
+      right: 20px;
+      bottom: 18px;
+      color: #fff;
+      z-index: 3;
+    }
+
+    .spotlight-label strong {
+      display: block;
+      font-size: 22px;
+      line-height: 1.15;
+    }
+
+    .spotlight-label span {
+      display: block;
+      margin-top: 6px;
+      color: rgba(255,255,255,.76);
+      font-size: 13px;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 8px;
+      margin: 0 0 20px;
+      overflow-x: auto;
+      padding-bottom: 2px;
+    }
+
+    .ticket-filter {
+      margin: -6px 0 22px;
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #fff;
+      box-shadow: 0 8px 24px rgba(24,32,46,.05);
+    }
+
+    .ticket-filter.month-filter {
+      margin-top: -12px;
+    }
+
+    .ticket-filter-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+
+    .ticket-filter-head h3 {
+      margin: 0;
+      font-size: 14px;
+      line-height: 1.3;
+    }
+
+    .ticket-filter-head span {
+      color: var(--muted);
+      font-size: 12px;
+      white-space: nowrap;
+    }
+
+    .source-buttons {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding-bottom: 2px;
+    }
+
+    .month-buttons {
+      flex-wrap: wrap;
+      overflow-x: visible;
+    }
+
+    .source-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      min-height: 40px;
+      padding: 0 12px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #fff;
+      color: #334155;
+      cursor: pointer;
+      font-weight: 720;
+      white-space: nowrap;
+    }
+
+    .source-button span {
+      min-width: 24px;
+      padding: 2px 7px;
+      border-radius: 999px;
+      background: #f1f5f9;
+      color: #64748b;
+      font-size: 12px;
+      text-align: center;
+    }
+
+    .source-button[aria-selected="true"] {
+      border-color: #111827;
+      background: #111827;
+      color: #fff;
+    }
+
+    .source-button[aria-selected="true"] span {
+      background: rgba(255,255,255,.18);
+      color: #fff;
+    }
+
+    .scraper-demo {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 16px;
+      align-items: center;
+      margin: 0 0 20px;
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #fff;
+      box-shadow: 0 8px 24px rgba(24,32,46,.05);
+    }
+
+    .scraper-demo h3 {
+      margin: 0;
+      font-size: 16px;
+      line-height: 1.35;
+    }
+
+    .scraper-demo p {
+      margin: 4px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .scraper-actions {
+      display: flex;
+      gap: 8px;
+      justify-content: flex-end;
+      flex-wrap: wrap;
+    }
+
+    .scrape-log {
+      display: none;
+      grid-column: 1 / -1;
+      margin: 0;
+      padding: 12px;
+      border-radius: var(--radius);
+      background: #0f172a;
+      color: #dbeafe;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 12px;
+      line-height: 1.55;
+      white-space: pre-wrap;
+    }
+
+    .scrape-log.show {
+      display: block;
+    }
+
+    .tab {
+      min-height: 42px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 0 14px;
+      background: #fff;
+      color: #334155;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .tab[aria-selected="true"] {
+      background: #111827;
+      border-color: #111827;
+      color: #fff;
+    }
+
+    .month-group {
+      margin-top: 26px;
+    }
+
+    .result-summary {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin: 18px 0 0;
+      padding: 12px 14px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #fff;
+      color: #475569;
+      font-size: 14px;
+      line-height: 1.45;
+    }
+
+    .result-summary strong {
+      color: var(--ink);
+      font-weight: 760;
+    }
+
+    .month-head {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 18px;
+      margin-bottom: 12px;
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 10px;
+    }
+
+    .month-head h3 {
+      margin: 0;
+      font-size: 22px;
+      line-height: 1.2;
+    }
+
+    .month-head p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .card {
+      display: grid;
+      grid-template-columns: 112px minmax(0, 1fr);
+      min-height: 184px;
+      overflow: hidden;
+      border-radius: var(--radius);
+      border: 1px solid var(--line);
+      background: var(--panel);
+      box-shadow: 0 8px 24px rgba(24,32,46,.06);
+    }
+
+    .poster {
+      position: relative;
+      min-height: 184px;
+      overflow: hidden;
+      color: #fff;
+      isolation: isolate;
+    }
+
+    .poster-link {
+      display: block;
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .poster:before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(160deg, rgba(255,255,255,.18), transparent 35%),
+        repeating-linear-gradient(90deg, rgba(255,255,255,.08) 0 1px, transparent 1px 8px);
+      z-index: 1;
+    }
+
+    .poster:after {
+      content: "";
+      position: absolute;
+      left: 18%;
+      right: 18%;
+      bottom: 28px;
+      height: 48px;
+      border-radius: 50% 50% 10px 10px;
+      background: rgba(255,255,255,.88);
+      box-shadow: 0 -40px 34px rgba(255,255,255,.18);
+      z-index: 2;
+    }
+
+    .poster.thai { background: linear-gradient(150deg, #0f766e, #f97316); }
+    .poster.korea { background: linear-gradient(150deg, #6d28d9, #db2777); }
+    .poster.western { background: linear-gradient(150deg, #1d4ed8, #059669); }
+    .poster.stage { background: linear-gradient(150deg, #7c2d12, #b45309 46%, #334155); }
+
+    .poster span {
+      position: absolute;
+      left: 10px;
+      right: 10px;
+      bottom: 10px;
+      z-index: 3;
+      font-size: 11px;
+      font-weight: 800;
+      line-height: 1.15;
+      text-transform: uppercase;
+      text-shadow: 0 1px 10px rgba(0,0,0,.45);
+    }
+
+    .poster.has-image {
+      background: #111827;
+    }
+
+    .poster.has-image:before {
+      background:
+        linear-gradient(to top, rgba(2,6,23,.72), transparent 56%),
+        linear-gradient(160deg, rgba(255,255,255,.12), transparent 35%);
+    }
+
+    .poster.has-image:after {
+      display: none;
+    }
+
+    .poster img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: 0;
+    }
+
+    .poster-link:focus-visible,
+    .title-link:focus-visible {
+      outline: 3px solid rgba(37, 99, 235, .35);
+      outline-offset: 3px;
+    }
+
+    .card-body {
+      min-width: 0;
+      display: grid;
+      gap: 10px;
+      padding: 14px;
+    }
+
+    .meta-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .badge,
+    .source {
+      display: inline-flex;
+      align-items: center;
+      min-height: 24px;
+      padding: 3px 8px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 760;
+      white-space: nowrap;
+    }
+
+    .badge.thai { color: #0f766e; background: #ccfbf1; }
+    .badge.korea { color: #6d28d9; background: #ede9fe; }
+    .badge.western { color: #1d4ed8; background: #dbeafe; }
+    .badge.stage { color: #9a3412; background: #ffedd5; }
+
+    .source {
+      color: #475569;
+      background: #f1f5f9;
+    }
+
+    .card h4 {
+      margin: 0;
+      font-size: 17px;
+      line-height: 1.25;
+      overflow-wrap: anywhere;
+    }
+
+    .title-link {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .title-link:hover {
+      color: var(--blue);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+
+    .venue {
+      margin: -4px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.4;
+    }
+
+    .date-grid {
+      display: grid;
+      gap: 7px;
+      margin-top: 2px;
+    }
+
+    .date-item {
+      display: grid;
+      grid-template-columns: 74px minmax(0, 1fr);
+      gap: 8px;
+      font-size: 13px;
+      line-height: 1.35;
+    }
+
+    .date-item span {
+      color: var(--muted);
+    }
+
+    .date-item strong {
+      font-weight: 720;
+    }
+
+    .actions {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-top: 2px;
+    }
+
+    .price {
+      color: #475569;
+      font-size: 13px;
+      font-weight: 680;
+    }
+
+    .link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 34px;
+      padding: 0 11px;
+      border-radius: var(--radius);
+      color: #fff;
+      background: #111827;
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 720;
+      white-space: nowrap;
+    }
+
+    .link[aria-disabled="true"],
+    .ghost-button:disabled {
+      opacity: .58;
+      cursor: not-allowed;
+    }
+
+    .ghost-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 34px;
+      padding: 0 11px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #fff;
+      color: #111827;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 720;
+      white-space: nowrap;
+    }
+
+    .detail-backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 40;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 22px;
+      background: rgba(15, 23, 42, .54);
+    }
+
+    .detail-backdrop.show {
+      display: flex;
+    }
+
+    .detail-dialog {
+      width: min(720px, 100%);
+      max-height: min(760px, calc(100vh - 44px));
+      overflow: auto;
+      border-radius: var(--radius);
+      background: #fff;
+      box-shadow: 0 24px 70px rgba(0,0,0,.28);
+    }
+
+    .detail-hero {
+      position: relative;
+      min-height: 168px;
+      padding: 22px;
+      color: #fff;
+      overflow: hidden;
+    }
+
+    .detail-hero:before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(135deg, rgba(255,255,255,.18), transparent 38%),
+        repeating-linear-gradient(90deg, rgba(255,255,255,.08) 0 1px, transparent 1px 10px);
+    }
+
+    .detail-hero.thai { background: linear-gradient(150deg, #0f766e, #f97316); }
+    .detail-hero.korea { background: linear-gradient(150deg, #6d28d9, #db2777); }
+    .detail-hero.western { background: linear-gradient(150deg, #1d4ed8, #059669); }
+    .detail-hero.stage { background: linear-gradient(150deg, #7c2d12, #b45309 46%, #334155); }
+
+    .detail-top {
+      position: relative;
+      display: flex;
+      align-items: start;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .detail-top h3 {
+      margin: 14px 0 0;
+      max-width: 560px;
+      font-size: clamp(25px, 4vw, 38px);
+      line-height: 1.05;
+    }
+
+    .close-button {
+      width: 38px;
+      height: 38px;
+      flex: 0 0 auto;
+      border: 1px solid rgba(255,255,255,.38);
+      border-radius: var(--radius);
+      background: rgba(255,255,255,.16);
+      color: #fff;
+      cursor: pointer;
+      font-size: 24px;
+      line-height: 1;
+    }
+
+    .detail-body {
+      padding: 22px;
+    }
+
+    .detail-body p {
+      margin: 0 0 18px;
+      color: #475569;
+      line-height: 1.7;
+    }
+
+    .detail-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+
+    .detail-item {
+      min-height: 74px;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #f8fafc;
+    }
+
+    .detail-item span {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+      margin-bottom: 5px;
+    }
+
+    .detail-item strong {
+      display: block;
+      line-height: 1.35;
+      overflow-wrap: anywhere;
+    }
+
+    .detail-item a {
+      color: var(--blue);
+      text-decoration: none;
+      overflow-wrap: anywhere;
+    }
+
+    .detail-item a:hover {
+      text-decoration: underline;
+    }
+
+    .detail-note {
+      padding: 12px;
+      border-left: 4px solid var(--teal);
+      border-radius: var(--radius);
+      background: #f0fdfa;
+      color: #115e59;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .detail-actions {
+      display: flex;
+      gap: 10px;
+      justify-content: flex-end;
+      flex-wrap: wrap;
+      margin-top: 18px;
+    }
+
+    .empty {
+      display: none;
+      padding: 34px;
+      border: 1px dashed #cbd5e1;
+      border-radius: var(--radius);
+      background: #fff;
+      color: #475569;
+      text-align: center;
+    }
+
+    .empty.show {
+      display: block;
+    }
+
+    @media (max-width: 1180px) {
+      .cards {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 860px) {
+      .app {
+        display: block;
+      }
+
+      aside {
+        position: relative;
+        height: auto;
+        padding: 18px;
+      }
+
+      .side-section.sources {
+        display: none;
+      }
+
+      .topbar {
+        position: relative;
+        grid-template-columns: 1fr;
+        padding: 16px;
+      }
+
+      .content {
+        padding: 18px 16px 34px;
+      }
+
+      .hero-strip {
+        grid-template-columns: 1fr;
+      }
+
+      .scraper-demo {
+        grid-template-columns: 1fr;
+      }
+
+      .scraper-actions {
+        justify-content: stretch;
+      }
+
+      .scraper-actions .link,
+      .scraper-actions .ghost-button {
+        width: 100%;
+      }
+    }
+
+    @media (max-width: 620px) {
+      .stat-grid {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+
+      .stat {
+        min-height: 66px;
+        padding: 10px 8px;
+      }
+
+      .stat strong {
+        font-size: 20px;
+      }
+
+      .stat span {
+        font-size: 10px;
+      }
+
+      .intro {
+        padding: 20px;
+      }
+
+      .intro h2 {
+        font-size: 31px;
+      }
+
+      .intro p {
+        font-size: 14px;
+      }
+
+      .cards {
+        grid-template-columns: 1fr;
+      }
+
+      .card {
+        grid-template-columns: 96px minmax(0, 1fr);
+      }
+
+      .poster,
+      .card {
+        min-height: 174px;
+      }
+
+      .month-head {
+        align-items: start;
+        flex-direction: column;
+      }
+
+      .detail-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 420px) {
+      .stat-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .card {
+        grid-template-columns: 1fr;
+      }
+
+      .poster {
+        min-height: 128px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside>
+      <div class="brand">
+        <div class="mark" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><path d="M6 9v6M10 5v14M14 8v8M18 4v16"></path></svg>
+        </div>
+        <div>
+          <h1>Thailand Concert Board</h1>
+          <p>รวมคอนเสิร์ตและการแสดงในไทย</p>
+        </div>
+      </div>
+
+      <section class="side-section">
+        <h2>ภาพรวม</h2>
+        <div class="stat-grid">
+          <div class="stat"><strong id="totalEvents">0</strong><span>งานทั้งหมด</span></div>
+          <div class="stat"><strong id="openSales">0</strong><span>กำลังขาย</span></div>
+          <div class="stat"><strong id="upcomingSales">0</strong><span>รอเปิดขาย</span></div>
+          <div class="stat"><strong id="monthCount">0</strong><span>เดือน</span></div>
+        </div>
+      </section>
+
+      <section class="side-section sources">
+        <h2>แหล่งข้อมูลที่รองรับ</h2>
+        <ul class="source-list">
+          <li>ThaiTicketMajor <span>ticket</span></li>
+          <li>Ticketmelon <span>ticket</span></li>
+          <li>Eventpop <span>event</span></li>
+          <li>AllTicket <span>ticket</span></li>
+          <li>Live Nation Tero <span>promoter</span></li>
+        </ul>
+      </section>
+    </aside>
+
+    <main>
+      <div class="topbar">
+        <label class="search" aria-label="ค้นหางาน">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="m16.5 16.5 4 4"></path></svg>
+          <input id="searchInput" type="search" placeholder="ค้นหาศิลปิน สถานที่ หรือเว็บจองบัตร">
+        </label>
+      </div>
+
+      <div class="content">
+        <section class="hero-strip">
+          <div class="intro">
+            <h2>ตารางเดียวสำหรับตามบัตรคอนเสิร์ตในไทย</h2>
+            <p>ดูวันเปิดขาย วันแสดง สถานที่ ราคาเริ่มต้น และเว็บจองบัตรในมุมมองเดียว แยกตามเดือนและประเภทงานเพื่อให้วางแผนได้เร็วขึ้น</p>
+          </div>
+          <div class="spotlight" aria-hidden="true">
+            <div id="heroCovers" class="hero-covers"></div>
+            <div class="spotlight-label">
+              <strong>Upcoming covers</strong>
+              <span>รูปปกจริงจากเว็บขายบัตร</span>
+            </div>
+          </div>
+        </section>
+
+        <nav class="tabs" aria-label="หมวดหมู่คอนเสิร์ต">
+          <button class="tab" data-category="all" aria-selected="true">ทั้งหมด</button>
+          <button class="tab" data-category="thai" aria-selected="false">ไทย</button>
+          <button class="tab" data-category="korea" aria-selected="false">เกาหลี</button>
+          <button class="tab" data-category="western" aria-selected="false">ฝรั่ง</button>
+          <button class="tab" data-category="stage" aria-selected="false">การแสดง</button>
+        </nav>
+
+        <section class="ticket-filter" aria-label="กรองตามเว็บขายบัตร">
+          <div class="ticket-filter-head">
+            <h3>เว็บขายบัตร</h3>
+            <span>เลือกดูเฉพาะเว็บที่ต้องการ</span>
+          </div>
+          <div id="sourceFilterPanel" class="source-buttons"></div>
+        </section>
+
+        <section class="ticket-filter month-filter" aria-label="กรองตามเดือน">
+          <div class="ticket-filter-head">
+            <h3>เดือนจัดงาน</h3>
+            <span>เลือกเดือนที่อยากดู</span>
+          </div>
+          <div id="monthFilterPanel" class="source-buttons month-buttons"></div>
+        </section>
+
+        <div id="resultSummary" class="result-summary"></div>
+        <section id="eventList" aria-live="polite"></section>
+        <div id="emptyState" class="empty">ไม่พบงานที่ตรงกับตัวกรองตอนนี้</div>
+      </div>
+    </main>
+  </div>
+
+  <div id="detailBackdrop" class="detail-backdrop" role="dialog" aria-modal="true" aria-labelledby="detailTitle">
+    <article class="detail-dialog">
+      <div id="detailHero" class="detail-hero western">
+        <div class="detail-top">
+          <div>
+            <span id="detailCategory" class="badge western">ฝรั่ง</span>
+            <h3 id="detailTitle">Concert details</h3>
+          </div>
+          <button id="closeDetail" class="close-button" type="button" aria-label="ปิดรายละเอียด">×</button>
+        </div>
+      </div>
+      <div id="detailBody" class="detail-body"></div>
+    </article>
+  </div>
+
+  <script>
+    const sampleEvents = [
+      {
+        "id": "ttm-2026-jay-b-tape-roots-bangkok",
+        "title": "2026 JAY B tape: roots bangkok",
+        "category": "korea",
+        "categoryLabel": "เกาหลี",
+        "source": "ThaiTicketMajor",
+        "venue": "อิมแพ็ค อารีน่า",
+        "saleDate": "2026-07-11T18:00:00+07:00",
+        "saleText": "ซื้อบัตร",
+        "eventDate": "2026-07-11T18:00:00+07:00",
+        "eventDates": [
+          "2026-07-11T18:00:00+07:00",
+          "2026-07-12T18:00:00+07:00"
+        ],
+        "price": "ดูราคาบนเว็บต้นทาง",
+        "url": "https://www.thaiticketmajor.com/concert/2026-jay-b-tape-roots-bangkok.html",
+        "sourcePageUrl": "https://www.thaiticketmajor.com/concert/2026-jay-b-tape-roots-bangkok.html",
+        "imageUrl": "https://www.thaiticketmajor.com/img_poster/prefix_1/0752/6752/2026-jay-b-tape-roots-bangkok-6a0ec5609f9d4-l.png",
+        "description": "ข้อมูลจากหน้า ThaiTicketMajor หมวดคอนเสิร์ต",
+        "ticketNote": "ซื้อบัตร"
+      },
+      {
+        "id": "ttm-mama-presents-piano-and-i-the-legends-party-2026-concert",
+        "title": "มาม่า Presents PIANO & i The Legends Party 2026 Concert",
+        "category": "thai",
+        "categoryLabel": "ไทย",
+        "source": "ThaiTicketMajor",
+        "venue": "BITEC LIVE",
+        "saleDate": "2026-07-11T18:00:00+07:00",
+        "saleText": "Sold Out",
+        "eventDate": "2026-07-11T18:00:00+07:00",
+        "eventDates": [
+          "2026-07-11T18:00:00+07:00"
+        ],
+        "price": "ดูราคาบนเว็บต้นทาง",
+        "url": "https://www.thaiticketmajor.com/concert/mama-presents-piano-and-i-the-legends-party-2026-concert.html",
+        "sourcePageUrl": "https://www.thaiticketmajor.com/concert/mama-presents-piano-and-i-the-legends-party-2026-concert.html",
+        "imageUrl": "https://www.thaiticketmajor.com/img_poster/prefix_1/0671/6671/mama-presents-piano-and-i-the-legends-party-2026-concert-6a3b52bed99d0-l.png",
+        "description": "ข้อมูลจากหน้า ThaiTicketMajor หมวดคอนเสิร์ต",
+        "ticketNote": "Sold Out"
+      },
+      {
+        "id": "ttm-the-fire-first-episode-premiere",
+        "title": "โซ่รักอัคนี First Episode Premiere",
+        "category": "stage",
+        "categoryLabel": "การแสดง",
+        "source": "ThaiTicketMajor",
+        "venue": "เมเจอร์ ซีนีเพล็กซ์ รัชโยธิน, โรงที่ 13",
+        "saleDate": "2026-07-11T18:00:00+07:00",
+        "saleText": "ซื้อบัตร",
+        "eventDate": "2026-07-11T18:00:00+07:00",
+        "eventDates": [
+          "2026-07-11T18:00:00+07:00"
+        ],
+        "price": "ดูราคาบนเว็บต้นทาง",
+        "url": "https://www.thaiticketmajor.com/concert/the-fire-first-episode-premiere.html",
+        "sourcePageUrl": "https://www.thaiticketmajor.com/concert/the-fire-first-episode-premiere.html",
+        "imageUrl": "https://www.thaiticketmajor.com/img_poster/prefix_1/0785/6785/the-fire-first-episode-premiere-6a34b18319cbc-l.jpg",
+        "description": "ข้อมูลจากหน้า ThaiTicketMajor หมวดคอนเสิร์ต",
+        "ticketNote": "ซื้อบัตร"
+      },
+      {
+        "id": "allticket-nara-fest",
+        "title": "NARA FEST",
+        "category": "thai",
+        "categoryLabel": "ไทย",
+        "source": "AllTicket",
+        "venue": "ตรวจสอบสถานที่บน AllTicket",
+        "saleDate": "2026-06-30T10:00:00+07:00",
+        "saleText": "ตรวจสอบสถานะขายบัตรบนเว็บต้นทาง",
+        "eventDate": "2026-07-12T18:00:00+07:00",
+        "price": "Pre Sale 1,490",
+        "status": "onsale",
+        "imageUrl": "https://atkmedia.allticket.com/assets/content/26069/210526NARA_Ticketcard.jpg",
+        "sourcePageUrl": "https://www.allticket.com/event/NaraFest2026",
+        "url": "https://www.allticket.com/event/NaraFest2026",
+        "description": "ข้อมูลจากหน้ารายละเอียดงานบน AllTicket",
+        "ticketNote": "กดที่มาข้อมูลเพื่อเปิดหน้ารายละเอียดงานนี้บน AllTicket"
+      },
+      {
+        "id": "ttm-rbso-2026-royal-harmony",
+        "title": "RBSO 2026 : Royal Harmony",
+        "category": "stage",
+        "categoryLabel": "การแสดง",
+        "source": "ThaiTicketMajor",
+        "venue": "ศูนย์วัฒนธรรมแห่งประเทศไทย หอประชุมใหญ่",
+        "saleDate": "2026-07-12T18:00:00+07:00",
+        "saleText": "ซื้อบัตร",
+        "eventDate": "2026-07-12T18:00:00+07:00",
+        "eventDates": [
+          "2026-07-12T18:00:00+07:00"
+        ],
+        "price": "ดูราคาบนเว็บต้นทาง",
+        "url": "https://www.thaiticketmajor.com/concert/rbso-2026-royal-harmony.html",
+        "sourcePageUrl": "https://www.thaiticketmajor.com/concert/rbso-2026-royal-harmony.html",
+        "imageUrl": "https://www.thaiticketmajor.com/img_poster/prefix_1/0758/6758/rbso-2026-royal-harmony-6a1e5bd965bb7-l.png",
+        "description": "ข้อมูลจากหน้า ThaiTicketMajor หมวดคอนเสิร์ต",
+        "ticketNote": "ซื้อบัตร"
+      },
+      {
+        "id": "ttm-badbadnotgood-2026-live-in-bangkok",
+        "title": "BADBADNOTGOOD 2026 LIVE IN BANGKOK",
+        "category": "western",
+        "categoryLabel": "ฝรั่ง",
+        "source": "ThaiTicketMajor",
+        "venue": "Volume Livehouse ชั้น B, The Street Ratchada",
+        "saleDate": "2026-07-16T18:00:00+07:00",
+        "saleText": "ซื้อบัตร",
+        "eventDate": "2026-07-16T18:00:00+07:00",
+        "eventDates": [
+          "2026-07-16T18:00:00+07:00"
+        ],
+        "price": "ดูราคาบนเว็บต้นทาง",
+        "url": "https://www.thaiticketmajor.com/concert/badbadnotgood-2026-live-in-bangkok.html",
+        "sourcePageUrl": "https://www.thaiticketmajor.com/concert/badbadnotgood-2026-live-in-bangkok.html",
+        "imageUrl": "https://www.thaiticketmajor.com/img_poster/prefix_1/0701/6701/badbadnotgood-2026-live-in-bangkok-6a4363a04028f-l.jpg",
+        "description": "ข้อมูลจากหน้า ThaiTicketMajor หมวดคอนเสิร์ต",
+        "ticketNote": "ซื้อบัตร"
+      },
+      {
+        "id": "ticketmelon-mitski-bangkok",
+        "title": "Mitski presents Nothing's About to Happen to Me in Bangkok",
+        "category": "western",
+        "categoryLabel": "ฝรั่ง",
+        "source": "Ticketmelon",
+        "venue": "UOB LIVE",
+        "saleDate": "2026-06-30T10:00:00+07:00",
+        "saleText": "ตรวจสอบสถานะขายบัตรบนเว็บต้นทาง",
+        "eventDate": "2026-07-16T20:00:00+07:00",
+        "price": "ดูราคาบนเว็บต้นทาง",
+        "status": "onsale",
+        "imageUrl": "https://tm-prod-event-files-v3.ticketmelon.com/4def7b1ffdb111f0990801117567899b/poster/120744fc004b11f1911101117567899b.png",
+        "sourcePageUrl": "https://www.ticketmelon.com/aeg/mitski",
+        "url": "https://www.ticketmelon.com/aeg/mitski",
+        "description": "ข้อมูลจากหน้ารายการงานบน Ticketmelon",
+        "ticketNote": "กดที่มาข้อมูลเพื่อดูรายละเอียดล่าสุดจากเว็บต้นทาง"
+      },
+      {
+        "id": "ticketmelon-ten-core0110",
+        "title": "TEN : CORE0110 - 10th Anniversary Concert",
+        "category": "korea",
+        "categoryLabel": "เกาหลี",
+        "source": "Ticketmelon",
+        "venue": "BITEC LIVE",
+        "saleDate": "2026-06-30T10:00:00+07:00",
+        "saleText": "ตรวจสอบสถานะขายบัตรบนเว็บต้นทาง",
+        "eventDate": "2026-07-17T19:00:00+07:00",
+        "price": "ดูราคาบนเว็บต้นทาง",
+        "status": "onsale",
+        "imageUrl": "https://tm-prod-event-files-v3.ticketmelon.com/5c403766501711f1923401117567899b/poster/ff77df71501811f1922201117567899b.png",
+        "sourcePageUrl": "https://www.ticketmelon.com/tenthsound/tencore0110",
+        "url": "https://www.ticketmelon.com/tenthsound/tencore0110",
+        "description": "งานจัดวันที่ 17 - 19 ก.ค. ข้อมูลจากหน้ารายการงานบน Ticketmelon",
+        "ticketNote": "กดที่มาข้อมูลเพื่อดูรายละเอียดล่าสุดจากเว็บต้นทาง"
+      },
+      {
+        "id": "allticket-team-blaze-the-way-bangkok",
+        "title": "2026 &TEAM CONCERT TOUR 'BLAZE THE WAY' IN BANGKOK",
+        "category": "korea",
+        "categoryLabel": "เกาหลี",
+        "source": "AllTicket",
+        "venue": "Thunder Dome, Muang Thong Thani",
+        "saleDate": "2026-06-30T10:00:00+07:00",
+        "saleText": "ตรวจสอบสถานะขายบัตรบนเว็บต้นทาง",
+        "eventDate": "2026-07-18T18:00:00+07:00",
+        "price": "2,800 - 6,000",
+        "status": "onsale",
+        "imageUrl": "https://atkmedia.allticket.com/assets/content/26933/Team_22052026_TicketCard.jpg",
+        "sourcePageUrl": "https://www.allticket.com/event/2026&TEAMCONCERTTOURINBANGKOK",
+        "url": "https://www.allticket.com/event/2026&TEAMCONCERTTOURINBANGKOK",
+        "description": "ข้อมูลจากหน้ารายละเอียดงานบน AllTicket",
+        "ticketNote": "กดที่มาข้อมูลเพื่อเปิดหน้ารายละเอียดงานนี้บน AllTicket"
+      },
+      {
+        "id": "ttm-maleewan-love-in-rock-concert",
+        "title": "Maleewan Love in Rock Concert ''เพลงรัก พลังร็อก''",
+        "category": "thai",
+        "categoryLabel": "ไทย",
+        "source": "ThaiTicketMajor",
+        "venue": "ยูโอบี ไลฟ์, เอ็มสเฟียร์",
+        "saleDate": "2026-07-18T18:00:00+07:00",
+        "saleText": "ซื้อบัตร",
+        "eventDate": "2026-07-18T18:00:00+07:00",
+        "eventDates": [
+          "2026-07-18T18:00:00+07:00"
+        ],
+        "price": "ดูราคาบนเว็บต้นทาง",
+        "url": "https://www.thaiticketmajor.com/concert/maleewan-love-in-rock-concert.html",
+        "sourcePageUrl": "https://www.thaiticketmajor.com/concert/maleewan-love-in-rock-concert.html",
+        "imageUrl": "https://www.thaiticketmajor.com/img_poster/prefix_1/0745/6745/maleewan-love-in-rock-concert-6a0c1926c47c5-l.png",
+        "description": "ข้อมูลจากหน้า ThaiTicketMajor หมวดคอนเสิร์ต",
+        "ticketNote": "ซื้อบัตร"
+      },
+      {
+        "id": "ttm-perth-santa-devils-kiss-concert",
+        "title": "PERTH SANTA DEVIL'S KISS CONCERT",
+        "category": "thai",
+        "categoryLabel": "ไทย",
+        "source": "ThaiTicketMajor",
+        "venue": "พารากอน ฮอลล์",
+        "saleDate": "2026-07-18T18:00:00+07:00",
+        "saleText": "ซื้อบัตร",
+        "eventDate": "2026-07-18T18:00:00+07:00",
+        "eventDates": [
+          "2026-07-18T18:00:00+07:00",
+          "2026-07-19T18:00:00+07:00"
+        ],
+        "price": "ดูราคาบนเว็บต้นทาง",
+        "url": "https://www.thaiticketmajor.com/concert/perth-santa-devils-kiss-concert.html",
+        "sourcePageUrl": "https://www.thaiticketmajor.com/concert/perth-santa-devils-kiss-concert.html",
+        "imageUrl": "https://www.thaiticketmajor.com/img_poster/prefix_1/0711/6711/perth-santa-devils-kiss-concert-6a0d8ee56b978-l.jpg",
+        "description": "ข้อมูลจากหน้า ThaiTicketMajor หมวดคอนเสิร์ต",
+        "ticketNote": "ซื้อบัตร"
+      },
+      {
+        "id": "allticket-ryeowook-dive-to-blue-bangkok",
+        "title": "RYEOWOOK'S AGIT CONCERT : DIVE TO BLUE in BANGKOK",
+        "category": "korea",
+        "categoryLabel": "เกาหลี",
+        "source": "AllTicket",
+        "venue": "ตรวจสอบสถานที่บน AllTicket",
+        "saleDate": "2026-06-30T10:00:00+07:00",
+        "saleText": "ตรวจสอบสถานะขายบัตรบนเว็บต้นทาง",
+        "eventDate": "2026-07-18T18:00:00+07:00",
+        "price": "2,800 - 6,800",
+        "status": "onsale",
+        "imageUrl": "https://atkmedia.allticket.com/assets/content/26932/RYEOWOOK_12052026_TicketCard_2.jpg",
+        "sourcePageUrl": "https://www.allticket.com/event/RYEOWOOK_DIVE_TO_BLUE_in_BKK",
+        "url": "https://www.allticket.com/event/RYEOWOOK_DIVE_TO_BLUE_in_BKK",
+        "description": "ข้อมูลจากหน้ารายละเอียดงานบน AllTicket",
+        "ticketNote": "กดที่มาข้อมูลเพื่อเปิดหน้ารายละเอียดงานนี้บน AllTicket"
+      },
+      {
+        "id": "ttm-the-ever-after-stories-musical-moments-3",
+        "title": "คอนเสิร์ตการกุศล The EVER AFTER Stories_Musical Moments III",
+        "category": "stage",
+        "categoryLabel": "การแสดง",
+        "source": "ThaiTicketMajor",
+        "venue": "โรงละครอักษรา คิง เพาเวอร์",
+        "saleDate": "2026-07-18T18:00:00+07:00",
+        "saleText": "ซื้อบัตร",
+        "eventDate": "2026-07-18T18:00:00+07:00",
+        "eventDates": [
+          "2026-07-18T18:00:00+07:00",
+          "2026-07-19T18:00:00+07:00"
+        ],
+        "price": "ดูราคาบนเว็บต้นทาง",
+        "url": "https://www.thaiticketmajor.com/concert/the-ever-after-stories-musical-moments-3.html",
+        "sourcePageUrl": "https://www.thaiticketmajor.com/concert/the-ever-after-stories-musical-moments-3.html",
+        "imageUrl": "https://www.thaiticketmajor.com/img_poster/prefix_1/0754/6754/the-ever-after-stories-musical-moments-3-6a1008de2dd7e-l.png",
+        "description": "ข้อมูลจากหน้า ThaiTicketMajor หมวดคอนเสิร์ต",
+        "ticketNote": "ซื้อบัตร"
+      },
+      {
+        "id": "ttm-centimillimental-world-tour-2025-2026-cafune",
+        "title": "Centimillimental WORLD TOUR 2025-2026 ''Cafuné''",
+        "category": "korea",
+        "categoryLabel": "เกาหลี",
+        "source": "ThaiTicketMajor",
+        "venue": "เซ็นทรัลเวิลด์ ไลฟ์, ชั้น 8 เซ็นทรัลเวิลด์",
+        "saleDate": "2026-07-19T18:00:00+07:00",
+        "saleText": "ซื้อบัตร",
+        "eventDate": "2026-07-19T18:00:00+07:00",
+        "eventDates": [
+          "2026-07-19T18:00:00+07:00"
+        ],
+        "price": "ดูราคาบนเว็บต้นทาง",
+        "url": "https://www.thaiticketmajor.com/concert/centimillimental-world-tour-2025-2026-cafune.html",
+        "sourcePageUrl": "https://www.thaiticketmajor.com/concert/centimillimental-world-tour-2025-2026-cafune.html",
+        "imageUrl": "https://www.thaiticketmajor.com/img_poster/prefix_1/0680/6680/centimillimental-world-tour-2025-2026-cafune-69d616842fde1-l.png",
+        "description": "ข้อมูลจากหน้า ThaiTicketMajor หมวดคอนเสิร์ต",
+        "ticketNote": "ซื้อบัตร"
+      },
+      {
+        "id": "allticket-lingorm-thailand-fan-meeting-tour-2026",
+        "title": "LINGORM Thailand FAN MEETING TOUR 2026",
+        "category": "thai",
+        "categoryLabel": "ไทย",
+        "source": "AllTicket",
+        "venue": "หลายจังหวัดในไทย",
+        "saleDate": "2026-06-30T10:00:00+07:00",
+        "saleText": "ตรวจสอบสถานะขายบัตรบนเว็บต้นทาง",
+        "eventDate": "2026-07-19T18:00:00+07:00",
+        "price": "1,890 - 3,890",
+        "status": "onsale",
+        "imageUrl": "https://atkmedia.allticket.com/assets/content/21281/02062026LINGORM_Ticketcard.jpg",
+        "sourcePageUrl": "https://www.allticket.com/event/LINGORMTHAILANDFANMEETINGTOUR",
+        "url": "https://www.allticket.com/event/LINGORMTHAILANDFANMEETINGTOUR",
+        "description": "แฟนมีตทัวร์ มีรอบวันที่ 4, 19 ก.ค. และ 15 ส.ค. ข้อมูลจากหน้ารายละเอียดงานบน AllTicket",
+        "ticketNote": "กดที่มาข้อมูลเพื่อเปิดหน้ารายละเอียดงานนี้บน AllTicket",
+        "eventDates": [
+          "2026-07-04T18:00:00+07:00",
+          "2026-07-19T18:00:00+07:00",
+          "2026-08-15T18:00:00+07:00"
+        ]
+      },
+      {
+        "id": "ttm-xg-world-tour-the-core-in-bangkok",
+        "title": "XG WORLD TOUR : THE CORE IN BANGKOK",
+        "category": "korea",
+        "categoryLabel": "เกาหลี",
+        "source": "ThaiTicketMajor",
+        "venue": "อิมแพ็ค อารีน่า เมืองทองธานี",
+        "saleDate": "2026-07-19T18:00:00+07:00",
+        "saleText": "ซื้อบัตร",
+        "eventDate": "2026-07-19T18:00:00+07:00",
+        "eventDates": [
+          "2026-07-19T18:00:00+07:00"
+        ],
+        "price": "ดูราคาบนเว็บต้นทาง",
+        "url": "https://www.thaiticketmajor.com/concert/xg-world-tour-the-core-in-bangkok.html",
+        "sourcePageUrl": "https://www.thaiticketmajor.com/concert/xg-world-tour-the-core-in-bangkok.html",
+        "imageUrl": "https://www.thaiticketmajor.com/img_poster/prefix_1/0690/6690/xg-world-tour-the-core-in-bangkok-69e0a1c2ac5e3-l.png",
+        "description": "ข้อมูลจากหน้า ThaiTicketMajor หมวดคอนเสิร์ต",
+        "ticketNote": "ซื้อบัตร"
+      },
+      {
+        "id": "allticket-bus-light-as-one-concert",
+        "title": "BUS LIGHT AS ONE CONCERT",
+        "category": "thai",
+        "categoryLabel": "ไทย",
+        "source": "AllTicket",
+        "venue": "ตรวจสอบสถานที่บน AllTicket",
+        "saleDate": "2026-06-30T10:00:00+07:00",
+        "saleText": "ตรวจสอบสถานะขายบัตรบนเว็บต้นทาง",
+        "eventDate": "2026-07-24T18:00:00+07:00",
+        "price": "1,500 - 6,500",
+        "status": "soldout",
+        "imageUrl": "https://atkmedia.allticket.com/assets/content/26931/130626BUS_ticketcard_soldout.jpg",
+        "sourcePageUrl": "https://www.allticket.com/event/BUSLIGHTASONECONCERT",
+        "url": "https://www.allticket.com/event/BUSLIGHTASONECONCERT",
+        "description": "คอนเสิร์ตจัดวันที่ 24-26 ก.ค. ข้อมูลจากหน้ารายละเอียดงานบน AllTicket",
+        "ticketNote": "กดที่มาข้อมูลเพื่อเปิดหน้ารายละเอียดงานนี้บน AllTicket",
+        "eventDates": [
+          "2026-07-24T18:00:00+07:00",
+          "2026-07-25T18:00:00+07:00",
+          "2026-07-26T18:00:00+07:00"
+        ]
+      },
+      {
+        "id": "ttm-feel-fan-fun-party-concert",
+        "title": "FEEL FAN FUN PARTY CONCERT",
+        "category": "western",
+        "categoryLabel": "ฝรั่ง",
+        "source": "ThaiTicketMajor",
+        "venue": "ยูเนี่ยน ฮอลล์ ชั้น F6 ศูนย์การค้ายูเนี่ยน มอลล์",
+        "saleDate": "2026-07-25T18:00:00+07:00",
+        "saleText": "ซื้อบัตร",
+        "eventDate": "2026-07-25T18:00:00+07:00",
+        "eventDates": [
+          "2026-07-25T18:00:00+07:00",
+          "2026-07-26T18:00:00+07:00"
+        ],
+        "price": "ดูราคาบนเว็บต้นทาง",
+        "url": "https://www.thaiticketmajor.com/concert/feel-fan-fun-party-concert.html",
+        "sourcePageUrl": "https://www.thaiticketmajor.com/concert/feel-fan-fun-party-concert.html",
+        "imageUrl": "https://www.thaiticketmajor.com/img_poster/prefix_1/0750/6750/feel-fan-fun-party-concert-6a3a8b2d178fb-l.jpg",
+        "description": "ข้อมูลจากหน้า ThaiTicketMajor หมวดคอนเสิร์ต",
+        "ticketNote": "ซื้อบัตร"
+      },
+      {
+        "id": "ticketmelon-honne-first-night",
+        "title": "HONNE 10 YEAR ANNIVERSARY TOUR - The First Night",
+        "category": "western",
+        "categoryLabel": "ฝรั่ง",
+        "source": "Ticketmelon",
+        "venue": "KBank Siam Pic-Ganesha Theatre",
+        "saleDate": "2026-06-30T10:00:00+07:00",
+        "saleText": "ตรวจสอบสถานะขายบัตรบนเว็บต้นทาง",
+        "eventDate": "2026-07-25T20:00:00+07:00",
+        "price": "ดูราคาบนเว็บต้นทาง",
+        "status": "onsale",
+        "imageUrl": "https://tm-prod-event-files-v3.ticketmelon.com/1368d4c21b7e11f1943101117567899b/poster/69eb3c511b7f11f1923401117567899b.png",
+        "sourcePageUrl": "https://www.ticketmelon.com/crewave/honne10yearanniversary-firstnight",
+        "url": "https://www.ticketmelon.com/crewave/honne10yearanniversary-firstnight",
+        "description": "ข้อมูลจากหน้ารายการงานบน Ticketmelon",
+        "ticketNote": "กดที่มาข้อมูลเพื่อดูรายละเอียดล่าสุดจากเว็บต้นทาง"
+      },
+      {
+        "id": "eventpop-spectacle-season-2",
+        "title": "Spectacle Season 2 : The Unstoppable",
+        "category": "thai",
+        "categoryLabel": "ไทย",
+        "source": "Eventpop",
+        "venue": "One Bangkok Forum, Bangkok",
+        "saleDate": "2026-06-28T11:00:00+07:00",
+        "saleText": "Public sale: 28 มิ.ย. 2569 11:00 น.",
+        "eventDate": "2026-07-26T16:00:00+07:00",
+        "price": "1,500 - 5,000 บาท",
+        "status": "onsale",
+        "imageUrl": "https://p-u.popcdn.net/event_details/posters/000/157/129/large/db36ef052550a8ea5fe1a492e3603af0712b49a8.jpg?1782120696=",
+        "sourcePageUrl": "https://www.eventpop.me/e/157129/spectacle-season-2",
+        "url": "https://www.eventpop.me/e/157129/spectacle-season-2",
+        "description": "คอนเสิร์ต T-Pop รวมศิลปิน CIR*CRL, ATLAS, GELBOYS, DICE, PROXIE และไลน์อัปอื่น ๆ ข้อมูลจาก Eventpop",
+        "ticketNote": "กดที่มาข้อมูลเพื่อดูรายละเอียดล่าสุดจากเว็บต้นทาง"
+      },
+      {
+        "id": "ttm-from-west-to-east-by-moscow-saxophone-quartet",
+        "title": "''From west to east'' by Moscow Saxophone Quartet",
+        "category": "stage",
+        "categoryLabel": "การแสดง",
+        "source": "ThaiTicketMajor",
+        "venue": "ศูนย์วัฒนธรรมแห่งประเทศไทย หอประชุมใหญ่",
+        "saleDate": "2026-07-26T18:00:00+07:00",
+        "saleText": "ซื้อบัตร",
+        "eventDate": "2026-07-26T18:00:00+07:00",
+        "eventDates": [
+          "2026-07-26T18:00:00+07:00"
+        ],
+        "price": "ดูราคาบนเว็บต้นทาง",
+        "url": "https://www.thaiticketmajor.com/concert/from-west-to-east-by-moscow-saxophone-quartet.html",
+        "sourcePageUrl": "https://www.thaiticketmajor.com/concert/from-west-to-east-by-moscow-saxophone-quartet.html",
+        "imageUrl": "https://www.thaiticketmajor.com/img_poster/prefix_1/0706/6706/from-west-to-east-by-moscow-saxophone-quartet-69f3206c0d940-l.png",
+        "description": "ข้อมูลจากหน้า ThaiTicketMajor หมวดคอนเสิร์ต",
+        "ticketNote": "ซื้อบัตร"
+      },
+      {
+        "id": "ticketmelon-honne-second-night",
+        "title": "HONNE 10 YEAR ANNIVERSARY TOUR - The Second Night",
+        "category": "western",
+        "categoryLabel": "ฝรั่ง",
+        "source": "Ticketmelon",
+        "venue": "KBank Siam Pic-Ganesha Theatre",
+        "saleDate": "2026-06-30T10:00:00+07:00",
+        "saleText": "ตรวจสอบสถานะขายบัตรบนเว็บต้นทาง",
+        "eventDate": "2026-07-26T20:00:00+07:00",
+        "price": "ดูราคาบนเว็บต้นทาง",
+        "status": "onsale",
+        "imageUrl": "https://tm-prod-event-files-v3.ticketmelon.com/285d623220f811f1967801117567899b/poster/05eb8ae1213511f1911101117567899b.png",
+        "sourcePageUrl": "https://www.ticketmelon.com/crewave/honne10yearanniversary-secondnight",
+        "url": "https://www.ticketmelon.com/crewave/honne10yearanniversary-secondnight",
+        "description": "ข้อมูลจากหน้ารายการงานบน Ticketmelon",
+        "ticketNote": "กดที่มาข้อมูลเพื่อดูรายละเอียดล่าสุดจากเว็บต้นทาง"
+      },
+      {
+        "id": "ttm-joss-gawin-heat-and-beat-concert",
+        "title": "JOSS GAWIN HEAT & BEAT CONCERT",
+        "category": "thai",
+        "categoryLabel": "ไทย",
+        "source": "ThaiTicketMajor",
+        "venue": "ยูเนี่ยน ฮอลล์ ชั้น F6 ศูนย์การค้ายูเนี่ยน มอลล์",
+        "saleDate": "2026-07-28T18:00:00+07:00",
+        "saleText": "ซื้อบัตร",
+        "eventDate": "2026-07-28T18:00:00+07:00",
+        "eventDates": [
+          "2026-07-28T18:00:00+07:00"
+        ],
+        "price": "ดูราคาบนเว็บต้นทาง",
+        "url": "https://www.thaiticketmajor.com/concert/joss-gawin-heat-and-beat-concert.html",
+        "sourcePageUrl": "https://www.thaiticketmajor.com/concert/joss-gawin-heat-and-beat-concert.html",
+        "imageUrl": "https://www.thaiticketmajor.com/img_poster/prefix_1/0751/6751/joss-gawin-heat-and-beat-concert-6a3ce082a4311-l.png",
+        "description": "ข้อมูลจากหน้า ThaiTicketMajor หมวดคอนเสิร์ต",
+        "ticketNote": "ซื้อบัตร"
+      },
+      {
+        "id": "ttm-natori-one-man-live-tour-koshin-march-in-bangkok",
+        "title": "natori ONE-MAN LIVE TOUR ''Koshin (March)'' in Bangkok",
+        "category": "korea",
+        "categoryLabel": "เกาหลี",
+        "source": "ThaiTicketMajor",
+        "venue": "ยูโอบี ไลฟ์, เอ็มสเฟียร์",
+        "saleDate": "2026-07-28T18:00:00+07:00",
+        "saleText": "ซื้อบัตร",
+        "eventDate": "2026-07-28T18:00:00+07:00",
+        "eventDates": [
+          "2026-07-28T18:00:00+07:00"
+        ],
+        "price": "ดูราคาบนเว็บต้นทาง",
+        "url": "https://www.thaiticketmajor.com/concert/natori-one-man-live-tour-koshin-march-in-bangkok.html",
+        "sourcePageUrl": "https://www.thaiticketmajor.com/concert/natori-one-man-live-tour-koshin-march-in-bangkok.html",
+        "imageUrl": "https://www.thaiticketmajor.com/img_poster/prefix_1/0678/6678/natori-one-man-live-tour-koshin-march-in-bangkok-69d4e3ab3b8ca-l.png",
+        "description": "ข้อมูลจากหน้า ThaiTicketMajor หมวดคอนเสิร์ต",
+        "ticketNote": "ซื้อบัตร"
+      },
+      {
+        "id": "ttm-rbso-2026-royal-benevolence",
+        "title": "RBSO 2026 : Royal Benevolence",
+        "category": "stage",
+        "categoryLabel": "การแสดง",
+        "source": "ThaiTicketMajor",
+        "venue": "ศูนย์วัฒนธรรมแห่งประเทศไทย หอประชุมใหญ่",
+        "saleDate": "2026-07-31T18:00:00+07:00",
+        "saleText": "ซื้อบัตร",
+        "eventDate": "2026-07-31T18:00:00+07:00",
+        "eventDates": [
+          "2026-07-31T18:00:00+07:00"
+        ],
+        "price": "ดูราคาบนเว็บต้นทาง",
+        "url": "https://www.thaiticketmajor.com/concert/rbso-2026-royal-benevolence.html",
+        "sourcePageUrl": "https://www.thaiticketmajor.com/concert/rbso-2026-royal-benevolence.html",
+        "imageUrl": "https://www.thaiticketmajor.com/img_poster/prefix_1/0781/6781/rbso-2026-royal-benevolence-6a462046b82e7-l.png",
+        "description": "ข้อมูลจากหน้า ThaiTicketMajor หมวดคอนเสิร์ต",
+        "ticketNote": "ซื้อบัตร"
+      },
+      {
+        "id": "ttm-nuvoriginal",
+        "title": "CIMBweBOND Presents \"NUVORIGINAL\"",
+        "category": "western",
+        "categoryLabel": "ฝรั่ง",
+        "source": "ThaiTicketMajor",
+        "venue": "PARAGON HALL,5 FL SIAM PARAGON",
+        "saleDate": "2026-08-01T18:00:00+07:00",
+        "saleText": "ซื้อบัตร",
+        "eventDate": "2026-08-01T18:00:00+07:00",
+        "eventDates": [
+          "2026-08-01T18:00:00+07:00",
+          "2026-08-02T18:00:00+07:00"
+        ],
+        "price": "ดูราคาบนเว็บต้นทาง",
+        "url": "https://www.thaiticketmajor.com/nuvoriginal/",
+        "sourcePageUrl": "https://www.thaiticketmajor.com/nuvoriginal/",
+        "imageUrl": "https://www.thaiticketmajor.com/img_poster/prefix_1/0688/6688/nuvoriginal-6a3907c08f1c4-l.png",
+        "description": "ข้อมูลจากหน้า ThaiTicketMajor หมวดคอนเสิร์ต",
+        "ticketNote": "ซื้อบัตร"
+      },
+      {
+        "id": "allticket-dmd-sport-day-2026",
+        "title": "DMD SPORT DAY 2026",
+        "category": "thai",
+        "categoryLabel": "ไทย",
+        "source": "AllTicket",
+        "venue": "ตรวจสอบสถานที่บน AllTicket",
+        "saleDate": "2026-06-27T11:00:00+07:00",
+        "saleText": "Ticket on sale: 27 มิ.ย. 2569 11:00 น.",
+        "eventDate": "2026-08-01T18:00:00+07:00",
+        "price": "1,500 - 5,500",
+        "status": "onsale",
+        "imageUrl": "https://atkmedia.allticket.com/assets/content/21283/22062026DM26_Ticketcard.jpg",
+        "sourcePageUrl": "https://www.allticket.com/event/dmdsportday2026",
+        "url": "https://www.allticket.com/event/dmdsportday2026",
+        "description": "ข้อมูลจากหน้ารายละเอียดงานบน AllTicket",
+        "ticketNote": "กดที่มาข้อมูลเพื่อเปิดหน้ารายละเอียดงานนี้บน AllTicket"
+      },
+      {
+        "id": "ttm-f-forever-1st-world-tour-in-bangkok",
+        "title": "F✦FOREVER 1st World Tour in Bangkok",
+        "category": "korea",
+        "categoryLabel": "เกาหลี",
+        "source": "ThaiTicketMajor",
+        "venue": "อิมแพ็ค อารีน่า",
+        "saleDate": "2026-08-01T18:00:00+07:00",
+        "saleText": "ซื้อบัตร",
+        "eventDate": "2026-08-01T18:00:00+07:00",
+        "eventDates": [
+          "2026-08-01T18:00:00+07:00",
+          "2026-08-02T18:00:00+07:00"
+        ],
+        "price": "ดูราคาบนเว็บต้นทาง",
+        "url": "https://www.thaiticketmajor.com/concert/f-forever-1st-world-tour-in-bangkok.html",
+        "sourcePageUrl": "https://www.thaiticketmajor.com/concert/f-forever-1st-world-tour-in-bangkok.html",
+        "imageUrl": "https://www.thaiticketmajor.com/img_poster/prefix_1/0757/6757/f-forever-1st-world-tour-in-bangkok-6a228c53d6059-l.png",
+        "description": "ข้อมูลจากหน้า ThaiTicketMajor หมวดคอนเสิร์ต",
+        "ticketNote": "ซื้อบัตร"
+      },
+      {
+        "id": "allticket-girls-cup-presented-by-mama",
+        "title": "Girls Cup Presented by MAMA",
+        "category": "thai",
+        "categoryLabel": "ไทย",
+        "source": "AllTicket",
+        "venue": "ตรวจสอบสถานที่บน AllTicket",
+        "saleDate": "2026-07-02T10:00:00+07:00",
+        "saleText": "ตรวจสอบสถานะขายบัตรบนเว็บต้นทาง",
+        "eventDate": "2026-08-01T18:00:00+07:00",
+        "price": "1,200 - 4,800",
+        "status": "onsale",
+        "imageUrl": "https://atkmedia.allticket.com/assets/content/21285/GC_30062026_TicketCard.jpg",
+        "sourcePageUrl": "https://www.allticket.com/event/GirlsCupPresentedbyMAMA",
+        "url": "https://www.allticket.com/event/GirlsCupPresentedbyMAMA",
+        "description": "รายการใหม่จากหน้าหมวด Concert บน AllTicket วันที่ 1 ส.ค. 2569",
+        "ticketNote": "กดที่มาข้อมูลเพื่อเปิดหน้ารายละเอียดงานนี้บน AllTicket"
+      },
+      {
+        "id": "ttm-junior-mark-sunnymoon-concert",
+        "title": "JUNIOR MARK SunnyMoon CONCERT",
+        "category": "western",
+        "categoryLabel": "ฝรั่ง",
+        "source": "ThaiTicketMajor",
+        "venue": "BITEC LIVE",
+        "saleDate": "2026-08-07T18:00:00+07:00",
+        "saleText": "ซื้อบัตร",
+        "eventDate": "2026-08-07T18:00:00+07:00",
+        "eventDates": [
+          "2026-08-07T18:00:00+07:00",
+          "2026-08-08T18:00:00+07:00",
+          "2026-08-09T18:00:00+07:00"
+        ],
+        "price": "ดูราคาบนเว็บต้นทาง",
+        "url": "https://www.thaiticketmajor.com/concert/junior-mark-sunnymoon-concert.html",
+        "sourcePageUrl": "https://www.thaiticketmajor.com/concert/junior-mark-sunnymoon-concert.html",
+        "imageUrl": "https://www.thaiticketmajor.com/img_poster/prefix_1/0761/6761/junior-mark-sunnymoon-concert-6a3ce0b06e236-l.png",
+        "description": "ข้อมูลจากหน้า ThaiTicketMajor หมวดคอนเสิร์ต",
+        "ticketNote": "ซื้อบัตร"
+      },
+      {
+        "id": "allticket-nct-jnjm-duality-bangkok",
+        "title": "2026 NCT JNJM FANMEETING TOUR [DUALITY] # BANGKOK",
+        "category": "korea",
+        "categoryLabel": "เกาหลี",
+        "source": "AllTicket",
+        "venue": "Impact Arena, Muang Thong Thani",
+        "saleDate": "2026-06-29T19:00:00+07:00",
+        "saleText": "General sale: 29 มิ.ย. 2569 19:00 น.",
+        "eventDate": "2026-08-07T19:00:00+07:00",
+        "price": "2,000 - 6,500",
+        "status": "soldout",
+        "imageUrl": "https://atkmedia.allticket.com/assets/content/26921/JNJM_28062026_TicketCard.jpg",
+        "sourcePageUrl": "https://www.allticket.com/event/NCTJNJM_DUALITY_BANGKOK",
+        "url": "https://www.allticket.com/event/NCTJNJM_DUALITY_BANGKOK",
+        "description": "แฟนมีตติ้ง NCT JNJM มีรอบวันที่ 7 ส.ค. เวลา 19:00 และ 8-9 ส.ค. เวลา 17:00 ข้อมูลจากหน้ารายละเอียดงานบน AllTicket",
+        "ticketNote": "กดที่มาข้อมูลเพื่อดูรายละเอียดล่าสุดจากเว็บต้นทาง"
+      },
+      {
+        "id": "ttm-no1-supernova",
+        "title": "NO1.SUPERNOVA",
+        "category": "western",
+        "categoryLabel": "ฝรั่ง",
+        "source": "ThaiTicketMajor",
+        "venue": "หอประชุมมหิดลสิทธาคาร มหาวิทยาลัยมหิดลศาลายา",
+        "saleDate": "2026-08-09T18:00:00+07:00",
+        "saleText": "ดูรายละเอียดบนเว็บต้นทาง",
+        "eventDate": "2026-08-09T18:00:00+07:00",
+        "eventDates": [
+          "2026-08-09T18:00:00+07:00"
+        ],
+        "price": "ดูราคาบนเว็บต้นทาง",
+        "url": "https://www.thaiticketmajor.com/concert/no1-supernova.html",
+        "sourcePageUrl": "https://www.thaiticketmajor.com/concert/no1-supernova.html",
+        "imageUrl": "https://www.thaiticketmajor.com/img_poster/prefix_1/0584/6584/no1-supernova-6a03fd36a32c2-l.png",
+        "description": "ข้อมูลจากหน้า ThaiTicketMajor หมวดคอนเสิร์ต",
+        "ticketNote": "ดูรายละเอียดบนเว็บต้นทาง"
+      },
+      {
+        "id": "ttm-david-byrne-who-is-the-sky-tour-in-bangkok",
+        "title": "David Byrne : Who Is The Sky? Tour in Bangkok",
+        "category": "western",
+        "categoryLabel": "ฝรั่ง",
+        "source": "ThaiTicketMajor",
+        "venue": "ยูโอบี ไลฟ์, เอ็มสเฟียร์",
+        "saleDate": "2026-08-10T18:00:00+07:00",
+        "saleText": "ซื้อบัตร",
+        "eventDate": "2026-08-10T18:00:00+07:00",
+        "eventDates": [
+          "2026-08-10T18:00:00+07:00"
+        ],
+        "price": "ดูราคาบนเว็บต้นทาง",
+        "url": "https://www.thaiticketmajor.com/concert/david-byrne-who-is-the-sky-tour-in-bangkok.html",
+        "sourcePageUrl": "https://www.thaiticketmajor.com/concert/david-byrne-who-is-the-sky-tour-in-bangkok.html",
+        "imageUrl": "https://www.thaiticketmajor.com/img_poster/prefix_1/0691/6691/david-byrne-who-is-the-sky-tour-in-bangkok-69e5de35a7767-l.png",
+        "description": "ข้อมูลจากหน้า ThaiTicketMajor หมวดคอนเสิร์ต",
+        "ticketNote": "ซื้อบัตร"
+      },
+      {
+        "id": "ttm-nantida-soul-night-restage",
+        "title": "คอนเสิร์ตนั่งใกล้ Presents NANTIDA SOUL NIGHT RE-STAGE : THE ENCORE",
+        "category": "thai",
+        "categoryLabel": "ไทย",
+        "source": "ThaiTicketMajor",
+        "venue": "SiamPic Hall ชั้น 7, สยามสแควร์วัน",
+        "saleDate": "2026-08-14T18:00:00+07:00",
+        "saleText": "Sold Out",
+        "eventDate": "2026-08-14T18:00:00+07:00",
+        "eventDates": [
+          "2026-08-14T18:00:00+07:00"
+        ],
+        "price": "ดูราคาบนเว็บต้นทาง",
+        "url": "https://www.thaiticketmajor.com/concert/nantida-soul-night-restage.html",
+        "sourcePageUrl": "https://www.thaiticketmajor.com/concert/nantida-soul-night-restage.html",
+        "imageUrl": "https://www.thaiticketmajor.com/img_poster/prefix_1/0782/6782/nantida-soul-night-restage-6a48e49e26e43-l.jpg",
+        "description": "ข้อมูลจากหน้า ThaiTicketMajor หมวดคอนเสิร์ต",
+        "ticketNote": "Sold Out"
+      },
+      {
+        "id": "eventpop-togenashi-togeari-bangkok",
+        "title": "TOGENASHI TOGEARI \"Rinne no Kotowari\" in Bangkok",
+        "category": "western",
+        "categoryLabel": "ฝรั่ง",
+        "source": "Eventpop",
+        "venue": "Ambience Space, Bangkok",
+        "saleDate": "2026-06-30T10:00:00+07:00",
+        "saleText": "ตรวจสอบสถานะขายบัตรบนเว็บต้นทาง",
+        "eventDate": "2026-08-14T19:30:00+07:00",
+        "price": "1,900 - 3,900 บาท",
+        "status": "onsale",
+        "imageUrl": "https://p-u.popcdn.net/event_details/posters/000/152/836/large/0fbc3372cb3024d701936ba4293564de85943cf9.jpeg?1781693495=",
+        "sourcePageUrl": "https://www.eventpop.me/e/152836/togetogethailandconcert",
+        "url": "https://www.eventpop.me/e/152836/togetogethailandconcert",
+        "description": "คอนเสิร์ตวง TOGENASHI TOGEARI จากอนิเมะ GIRL BAND CRY ข้อมูลจากหน้ารายละเอียดงานบน Eventpop",
+        "ticketNote": "กดที่มาข้อมูลเพื่อดูรายละเอียดล่าสุดจากเว็บต้นทาง"
+      },
+      {
+        "id": "ttm-26th-sandarapark",
+        "title": "2026 SANDARA PARK FAN-CON ASIA TOUR [REPRISM] IN BANGKOK",
+        "category": "korea",
+        "categoryLabel": "เกาหลี",
+        "source": "ThaiTicketMajor",
+        "venue": "สามย่าน มิตรทาวน์ ฮอลล์",
+        "saleDate": "2026-08-15T18:00:00+07:00",
+        "saleText": "ซื้อบัตร",
+        "eventDate": "2026-08-15T18:00:00+07:00",
+        "eventDates": [
+          "2026-08-15T18:00:00+07:00"
+        ],
+        "price": "ดูราคาบนเว็บต้นทาง",
+        "url": "https://ticketmaster.co.th/activity/detail/26th_sandarapark",
+        "sourcePageUrl": "https://ticketmaster.co.th/activity/detail/26th_sandarapark",
+        "imageUrl": "https://www.thaiticketmajor.com/img_poster/prefix_1/0784/6784/2026-sandara-park-fan-con-asia-tour-reprism-in-bangkok-6a338f22cb131-l.png",
+        "description": "ข้อมูลจากหน้า ThaiTicketMajor หมวดคอนเสิร์ต",
+        "ticketNote": "ซื้อบัตร"
+      },
+      {
+        "id": "allticket-super-junior-83z-1983-bangkok",
+        "title": "2026 SUPER JUNIOR-83z FANCONTOUR [1983] in BANGKOK",
+        "category": "korea",
+        "categoryLabel": "เกาหลี",
+        "source": "AllTicket",
+        "venue": "ตรวจสอบสถานที่บน AllTicket",
+        "saleDate": "2026-06-30T10:00:00+07:00",
+        "saleText": "เร็วๆนี้",
+        "eventDate": "2026-08-15T18:00:00+07:00",
+        "price": "2,400 - 6,600",
+        "status": "upcoming",
+        "imageUrl": "https://atkmedia.allticket.com/assets/content/99930/SJ_20052026_TicketCard.jpg",
+        "sourcePageUrl": "https://www.allticket.com/event/SUPERJUNIOR_83z_in_BKK",
+        "url": "https://www.allticket.com/event/SUPERJUNIOR_83z_in_BKK",
+        "description": "ข้อมูลจากหน้ารายละเอียดงานบน AllTicket",
+        "ticketNote": "กดที่มาข้อมูลเพื่อเปิดหน้ารายละเอียดงานนี้บน AllTicket"
+      },
+      {
+        "id": "ttm-fandom-fest",
+        "title": "FANDOM FEST",
+        "category": "thai",
+        "categoryLabel": "ไทย",
+        "source": "ThaiTicketMajor",
+        "venue": "One Bangkok Forum, One Bangkok",
+        "saleDate": "2026-08-15T18:00:00+07:00",
+        "saleText": "ซื้อบัตร / Public Sale 6 ก.ค. 2569, 10:00 น.",
+        "eventDate": "2026-08-15T18:00:00+07:00",
+        "eventDates": [
+          "2026-08-15T18:00:00+07:00"
+        ],
+        "price": "ดูราคาบนเว็บต้นทาง",
+        "url": "https://www.thaiticketmajor.com/concert/fandom-fest.html",
+        "sourcePageUrl": "https://www.thaiticketmajor.com/concert/fandom-fest.html",
+        "imageUrl": "https://www.thaiticketmajor.com/img_poster/prefix_1/0792/6792/fandom-fest-6a3b7f3f6f174-l.png",
+        "description": "ข้อมูลจากหน้า ThaiTicketMajor หมวดคอนเสิร์ต",
+        "ticketNote": "ซื้อบัตร"
+      },
+      {
+        "id": "ttm-26th-leehi",
+        "title": "LEEHI & 808 HI RECORDINGS WORLD TOUR 2026 IN BANGKOK",
+        "category": "korea",
+        "categoryLabel": "เกาหลี",
+        "source": "ThaiTicketMajor",
+        "venue": "SPHERE HALL, 5M Floor EMSPHERE",
+        "saleDate": "2026-08-16T18:00:00+07:00",
+        "saleText": "ซื้อบัตร",
+        "eventDate": "2026-08-16T18:00:00+07:00",
+        "eventDates": [
+          "2026-08-16T18:00:00+07:00"
+        ],
+        "price": "ดูราคาบนเว็บต้นทาง",
+        "url": "https://ticketmaster.co.th/activity/detail/26th_leehi",
+        "sourcePageUrl": "https://ticketmaster.co.th/activity/detail/26th_leehi",
+        "imageUrl": "https://www.thaiticketmajor.com/img_poster/prefix_1/0681/6681/leehi-and-808-hi-recordings-world-tour-2026-in-bangkok-6a29356e7a553-l.jpg",
+        "description": "ข้อมูลจากหน้า ThaiTicketMajor หมวดคอนเสิร์ต",
+        "ticketNote": "ซื้อบัตร"
+      },
+      {
+        "id": "ttm-pond-phuwin-space-soul-dyssey-concert",
+        "title": "POND PHUWIN Space Soul-dyssey CONCERT",
+        "category": "thai",
+        "categoryLabel": "ไทย",
+        "source": "ThaiTicketMajor",
+        "venue": "อิมแพ็ค อารีน่า เมืองทองธานี",
+        "saleDate": "2026-08-21T18:00:00+07:00",
+        "saleText": "ซื้อบัตร",
+        "eventDate": "2026-08-21T18:00:00+07:00",
+        "eventDates": [
+          "2026-08-21T18:00:00+07:00",
+          "2026-08-22T18:00:00+07:00",
+          "2026-08-23T18:00:00+07:00"
+        ],
+        "price": "ดูราคาบนเว็บต้นทาง",
+        "url": "https://www.thaiticketmajor.com/concert/pond-phuwin-space-soul-dyssey-concert.html",
+        "sourcePageUrl": "https://www.thaiticketmajor.com/concert/pond-phuwin-space-soul-dyssey-concert.html",
+        "imageUrl": "https://www.thaiticketmajor.com/img_poster/prefix_1/0777/6777/pond-phuwin-space-soul-dyssey-concert-6a45fad0092b5-l.png",
+        "description": "ข้อมูลจากหน้า ThaiTicketMajor หมวดคอนเสิร์ต",
+        "ticketNote": "ซื้อบัตร"
+      },
+      {
+        "id": "ttm-2026-p1harmony-asia-stage-be-unique-in-bangkok",
+        "title": "2026 P1Harmony ASIA STAGE [BE UNIQUE] IN BANGKOK",
+        "category": "korea",
+        "categoryLabel": "เกาหลี",
+        "source": "ThaiTicketMajor",
+        "venue": "MCC HALL ชั้น 3 เดอะมอลล์ไลฟ์สโตร์ บางแค",
+        "saleDate": "2026-08-22T18:00:00+07:00",
+        "saleText": "ซื้อบัตร",
+        "eventDate": "2026-08-22T18:00:00+07:00",
+        "eventDates": [
+          "2026-08-22T18:00:00+07:00"
+        ],
+        "price": "ดูราคาบนเว็บต้นทาง",
+        "url": "https://www.thaiticketmajor.com/concert/2026-p1harmony-asia-stage-be-unique-in-bangkok.html",
+        "sourcePageUrl": "https://www.thaiticketmajor.com/concert/2026-p1harmony-asia-stage-be-unique-in-bangkok.html",
+        "imageUrl": "https://www.thaiticketmajor.com/img_poster/prefix_1/0788/6788/2026-p1harmony-asia-stage-be-unique-in-bangkok-6a3b9c9bcca54-l.png",
+        "description": "ข้อมูลจากหน้า ThaiTicketMajor หมวดคอนเสิร์ต",
+        "ticketNote": "ซื้อบัตร"
+      },
+      {
+        "id": "allticket-dice-entertainer-fancon-tour",
+        "title": "DICE THE ENTERTAINER: THE 1st THAILAND FANCON TOUR",
+        "category": "thai",
+        "categoryLabel": "ไทย",
+        "source": "AllTicket",
+        "venue": "หลายจังหวัดในไทย",
+        "saleDate": "2026-06-30T10:00:00+07:00",
+        "saleText": "ตรวจสอบสถานะขายบัตรบนเว็บต้นทาง",
+        "eventDate": "2026-08-22T18:00:00+07:00",
+        "price": "1,000 - 3,200",
+        "status": "onsale",
+        "imageUrl": "https://atkmedia.allticket.com/assets/content/21279/250526DICE_Ticketcard.jpg",
+        "sourcePageUrl": "https://www.allticket.com/event/DICETHAILANDFANCONTOUR",
+        "url": "https://www.allticket.com/event/DICETHAILANDFANCONTOUR",
+        "description": "แฟนคอนทัวร์ DICE มีรอบวันที่ 22 ส.ค. และ 5, 12, 26 ก.ย. ข้อมูลจากหน้ารายละเอียดงานบน AllTicket",
+        "ticketNote": "กดที่มาข้อมูลเพื่อเปิดหน้ารายละเอียดงานนี้บน AllTicket"
+      },
+      {
+        "id": "ttm-sound-of-the-60s-radio-on-stage-by-i-s-song-hits",
+        "title": "คอนเสิร์ต Sound Of The 60's : Radio On Stage by I.S. Song Hits",
+        "category": "thai",
+        "categoryLabel": "ไทย",
+        "source": "ThaiTicketMajor",
+        "venue": "SiamPic Hall ชั้น 7, สยามสแควร์วัน",
+        "saleDate": "2026-08-23T18:00:00+07:00",
+        "saleText": "เร็วๆนี้ / Public Sale 7 ก.ค. 2569, 10:00 น.",
+        "eventDate": "2026-08-23T18:00:00+07:00",
+        "eventDates": [
+          "2026-08-23T18:00:00+07:00"
+        ],
+        "price": "ดูราคาบนเว็บต้นทาง",
+        "url": "https://www.thaiticketmajor.com/concert/sound-of-the-60s-radio-on-stage-by-i-s-song-hits.html",
+        "sourcePageUrl": "https://www.thaiticketmajor.com/concert/sound-of-the-60s-radio-on-stage-by-i-s-song-hits.html",
+        "imageUrl": "https://www.thaiticketmajor.com/img_poster/prefix_1/0783/6783/sound-of-the-60s-radio-on-stage-by-i-s-song-hits-6a3277f9584e9-l.png",
+        "description": "ข้อมูลจากหน้า ThaiTicketMajor หมวดคอนเสิร์ต",
+        "ticketNote": "เร็วๆนี้"
+      },
+      {
+        "id": "ttm-kodaline-farewell-tour-in-bangkok",
+        "title": "Kodaline - Farewell Tour in Bangkok",
+        "category": "western",
+        "categoryLabel": "ฝรั่ง",
+        "source": "ThaiTicketMajor",
+        "venue": "ยูโอบี ไลฟ์, เอ็มสเฟียร์",
+        "saleDate": "2026-08-28T18:00:00+07:00",
+        "saleText": "ซื้อบัตร",
+        "eventDate": "2026-08-28T18:00:00+07:00",
+        "eventDates": [
+          "2026-08-28T18:00:00+07:00",
+          "2026-08-29T18:00:00+07:00"
+        ],
+        "price": "ดูราคาบนเว็บต้นทาง",
+        "url": "https://www.thaiticketmajor.com/concert/kodaline-farewell-tour-in-bangkok.html",
+        "sourcePageUrl": "https://www.thaiticketmajor.com/concert/kodaline-farewell-tour-in-bangkok.html",
+        "imageUrl": "https://www.thaiticketmajor.com/img_poster/prefix_1/0651/6651/kodaline-farewell-tour-in-bangkok-69d48ff765ecd-l.png",
+        "description": "ข้อมูลจากหน้า ThaiTicketMajor หมวดคอนเสิร์ต",
+        "ticketNote": "ซื้อบัตร"
+      },
+      {
+        "id": "ticketmelon-yonlapa-homebound",
+        "title": "Fungjai SOLO Series 02: YONLAPA 'Homebound'",
+        "category": "thai",
+        "categoryLabel": "ไทย",
+        "source": "Ticketmelon",
+        "venue": "The Street Hall 5fl., The Street Ratchada",
+        "saleDate": "2026-06-30T10:00:00+07:00",
+        "saleText": "ตรวจสอบสถานะขายบัตรบนเว็บต้นทาง",
+        "eventDate": "2026-08-28T20:00:00+07:00",
+        "price": "ดูราคาบนเว็บต้นทาง",
+        "status": "onsale",
+        "imageUrl": "https://tm-prod-event-files-v3.ticketmelon.com/b054c7736c7b11f1922201117567899b/poster/a3f9d3d66ed811f1943101117567899b.jpeg",
+        "sourcePageUrl": "https://www.ticketmelon.com/fungjai/fjsoloyonlapa",
+        "url": "https://www.ticketmelon.com/fungjai/fjsoloyonlapa",
+        "description": "ข้อมูลจากหน้ารายการงานบน Ticketmelon",
+        "ticketNote": "กดที่มาข้อมูลเพื่อดูรายละเอียดล่าสุดจากเว็บต้นทาง"
+      },
+      {
+        "id": "ttm-b-day-sbz-uncut-live-reel-01",
+        "title": "B.DAY UN·CUT LIVE CONCERT",
+        "category": "western",
+        "categoryLabel": "ฝรั่ง",
+        "source": "ThaiTicketMajor",
+        "venue": "พารากอน ฮอลล์",
+        "saleDate": "2026-08-29T18:00:00+07:00",
+        "saleText": "ซื้อบัตร",
+        "eventDate": "2026-08-29T18:00:00+07:00",
+        "eventDates": [
+          "2026-08-29T18:00:00+07:00"
+        ],
+        "price": "ดูราคาบนเว็บต้นทาง",
+        "url": "https://www.thaiticketmajor.com/concert/b-day-sbz-uncut-live-reel-01.html",
+        "sourcePageUrl": "https://www.thaiticketmajor.com/concert/b-day-sbz-uncut-live-reel-01.html",
+        "imageUrl": "https://www.thaiticketmajor.com/img_poster/prefix_1/0779/6779/b-day-sbz-uncut-live-reel-01-6a47d964eb414-l.jpg",
+        "description": "ข้อมูลจากหน้า ThaiTicketMajor หมวดคอนเสิร์ต",
+        "ticketNote": "ซื้อบัตร"
+      },
+      {
+        "id": "ttm-gfest-marathon-concert-2026",
+        "title": "GFEST MARATHON CONCERT 2026",
+        "category": "thai",
+        "categoryLabel": "ไทย",
+        "source": "ThaiTicketMajor",
+        "venue": "อิมแพ็ค อารีน่า เมืองทองธานี",
+        "saleDate": "2026-08-29T18:00:00+07:00",
+        "saleText": "Sold Out",
+        "eventDate": "2026-08-29T18:00:00+07:00",
+        "eventDates": [
+          "2026-08-29T18:00:00+07:00",
+          "2026-08-30T18:00:00+07:00"
+        ],
+        "price": "ดูราคาบนเว็บต้นทาง",
+        "url": "https://www.thaiticketmajor.com/concert/gfest-marathon-concert-2026.html",
+        "sourcePageUrl": "https://www.thaiticketmajor.com/concert/gfest-marathon-concert-2026.html",
+        "imageUrl": "https://www.thaiticketmajor.com/img_poster/prefix_1/0773/6773/gfest-marathon-concert-2026-6a489608d8b1f-l.jpg",
+        "description": "ข้อมูลจากหน้า ThaiTicketMajor หมวดคอนเสิร์ต",
+        "ticketNote": "Sold Out"
+      },
+      {
+        "id": "ttm-sotus-teniversary-concert",
+        "title": "SOTUS TENIVERSARY CONCERT",
+        "category": "thai",
+        "categoryLabel": "ไทย",
+        "source": "ThaiTicketMajor",
+        "venue": "ยูเนี่ยน ฮอลล์ ชั้น F6 ศูนย์การค้ายูเนี่ยน มอลล์",
+        "saleDate": "2026-08-29T18:00:00+07:00",
+        "saleText": "ซื้อบัตร",
+        "eventDate": "2026-08-29T18:00:00+07:00",
+        "eventDates": [
+          "2026-08-29T18:00:00+07:00",
+          "2026-08-30T18:00:00+07:00"
+        ],
+        "price": "ดูราคาบนเว็บต้นทาง",
+        "url": "https://www.thaiticketmajor.com/concert/sotus-teniversary-concert.html",
+        "sourcePageUrl": "https://www.thaiticketmajor.com/concert/sotus-teniversary-concert.html",
+        "imageUrl": "https://www.thaiticketmajor.com/img_poster/prefix_1/0790/6790/sotus-teniversary-concert-6a3d02e52b668-l.png",
+        "description": "ข้อมูลจากหน้า ThaiTicketMajor หมวดคอนเสิร์ต",
+        "ticketNote": "ซื้อบัตร"
+      },
+      {
+        "id": "allticket-u-know-project-26-scene-1",
+        "title": "U-KNOW PROJECT 26 : SCENE#1 in BANGKOK",
+        "category": "korea",
+        "categoryLabel": "เกาหลี",
+        "source": "AllTicket",
+        "venue": "ตรวจสอบสถานที่บน AllTicket",
+        "saleDate": "2026-06-30T10:00:00+07:00",
+        "saleText": "เร็วๆนี้",
+        "eventDate": "2026-08-29T18:00:00+07:00",
+        "price": "2,500 - 6,800",
+        "status": "upcoming",
+        "imageUrl": "https://atkmedia.allticket.com/assets/content/99941/Uknow_24062026_TicketCard.jpg",
+        "sourcePageUrl": "https://www.allticket.com/event/UKNOW_PROJECT26_BANGKOK",
+        "url": "https://www.allticket.com/event/UKNOW_PROJECT26_BANGKOK",
+        "description": "ข้อมูลจากหน้ารายละเอียดงานบน AllTicket",
+        "ticketNote": "กดที่มาข้อมูลเพื่อเปิดหน้ารายละเอียดงานนี้บน AllTicket"
+      },
+      {
+        "id": "ttm-farewell-concert-asanee-wasan",
+        "title": "FAREWELL CONCERT ''อยากจะย้ำชัดๆ ครั้งสุดท้าย'' อัสนี - วสันต์",
+        "category": "thai",
+        "categoryLabel": "ไทย",
+        "source": "ThaiTicketMajor",
+        "venue": "อิมแพ็ค อารีน่า เมืองทองธานี",
+        "saleDate": "2026-09-02T18:00:00+07:00",
+        "saleText": "Sold Out",
+        "eventDate": "2026-09-02T18:00:00+07:00",
+        "eventDates": [
+          "2026-09-02T18:00:00+07:00",
+          "2026-09-03T18:00:00+07:00",
+          "2026-09-05T18:00:00+07:00",
+          "2026-09-06T18:00:00+07:00"
+        ],
+        "price": "ดูราคาบนเว็บต้นทาง",
+        "url": "https://www.thaiticketmajor.com/concert/farewell-concert-asanee-wasan.html",
+        "sourcePageUrl": "https://www.thaiticketmajor.com/concert/farewell-concert-asanee-wasan.html",
+        "imageUrl": "https://www.thaiticketmajor.com/img_poster/prefix_1/0638/6638/farewell-concert-asanee-wasan-69b7942a73de6-l.jpg",
+        "description": "ข้อมูลจากหน้า ThaiTicketMajor หมวดคอนเสิร์ต",
+        "ticketNote": "Sold Out"
+      },
+      {
+        "id": "ttm-idol1st-kenty-asia-tour-2026-in-bangkok",
+        "title": "''IDOL1ST KENTY'' ASIA TOUR 2026 in BANGKOK",
+        "category": "western",
+        "categoryLabel": "ฝรั่ง",
+        "source": "ThaiTicketMajor",
+        "venue": "SiamPic Hall ชั้น 7, สยามสแควร์วัน",
+        "saleDate": "2026-09-05T18:00:00+07:00",
+        "saleText": "ซื้อบัตร",
+        "eventDate": "2026-09-05T18:00:00+07:00",
+        "eventDates": [
+          "2026-09-05T18:00:00+07:00",
+          "2026-09-06T18:00:00+07:00"
+        ],
+        "price": "ดูราคาบนเว็บต้นทาง",
+        "url": "https://www.thaiticketmajor.com/concert/idol1st-kenty-asia-tour-2026-in-bangkok.html",
+        "sourcePageUrl": "https://www.thaiticketmajor.com/concert/idol1st-kenty-asia-tour-2026-in-bangkok.html",
+        "imageUrl": "https://www.thaiticketmajor.com/img_poster/prefix_1/0714/6714/idol1st-kenty-asia-tour-2026-in-bangkok-69fbea3b7ba7a-l.jpg",
+        "description": "ข้อมูลจากหน้า ThaiTicketMajor หมวดคอนเสิร์ต",
+        "ticketNote": "ซื้อบัตร"
+      },
+      {
+        "id": "ttm-gemini-art-venture-concert",
+        "title": "GEMINI ART-VENTURE CONCERT",
+        "category": "thai",
+        "categoryLabel": "ไทย",
+        "source": "ThaiTicketMajor",
+        "venue": "BITEC LIVE",
+        "saleDate": "2026-09-05T18:00:00+07:00",
+        "saleText": "เร็วๆนี้ / Public Sale 11 ก.ค. 2569, 10:00 น.",
+        "eventDate": "2026-09-05T18:00:00+07:00",
+        "eventDates": [
+          "2026-09-05T18:00:00+07:00",
+          "2026-09-06T18:00:00+07:00"
+        ],
+        "price": "ดูราคาบนเว็บต้นทาง",
+        "url": "https://www.thaiticketmajor.com/concert/gemini-art-venture-concert.html",
+        "sourcePageUrl": "https://www.thaiticketmajor.com/concert/gemini-art-venture-concert.html",
+        "imageUrl": "https://www.thaiticketmajor.com/img_poster/prefix_1/0801/6801/gemini-art-venture-concert-6a43490513dca-l.png",
+        "description": "ข้อมูลจากหน้า ThaiTicketMajor หมวดคอนเสิร์ต",
+        "ticketNote": "เร็วๆนี้"
+      },
+      {
+        "id": "allticket-stone-head",
+        "title": "Stone Head",
+        "category": "thai",
+        "categoryLabel": "ไทย",
+        "source": "AllTicket",
+        "venue": "ตรวจสอบสถานที่บน AllTicket",
+        "saleDate": "2026-06-30T10:00:00+07:00",
+        "saleText": "ตรวจสอบสถานะขายบัตรบนเว็บต้นทาง",
+        "eventDate": "2026-09-05T18:00:00+07:00",
+        "price": "Early Bird 499 - 999",
+        "status": "onsale",
+        "imageUrl": "https://atkmedia.allticket.com/assets/content/26086/Stone_29062026_TicketCard_EB.jpg",
+        "sourcePageUrl": "https://www.allticket.com/event/StoneHead",
+        "url": "https://www.allticket.com/event/StoneHead",
+        "description": "Stone Head วันที่ 5 ก.ย. 2569 ข้อมูลจากหน้ารายละเอียดงานบน AllTicket",
+        "ticketNote": "กดที่มาข้อมูลเพื่อเปิดหน้ารายละเอียดงานนี้บน AllTicket"
+      },
+      {
+        "id": "ttm-thailand-philharmonic-orchestra-2025-2026",
+        "title": "Thailand Philharmonic Orchestra 2025 - 2026",
+        "category": "stage",
+        "categoryLabel": "การแสดง",
+        "source": "ThaiTicketMajor",
+        "venue": "หอประชุมมหิดลสิทธาคาร มหาวิทยาลัยมหิดลศาลายา",
+        "saleDate": "2025-12-06T18:00:00+07:00",
+        "saleText": "ซื้อบัตร",
+        "eventDate": "2026-09-05T18:00:00+07:00",
+        "eventDates": [
+          "2025-12-06T18:00:00+07:00",
+          "2026-09-05T18:00:00+07:00"
+        ],
+        "price": "ดูราคาบนเว็บต้นทาง",
+        "url": "https://www.thaiticketmajor.com/concert/thailand-philharmonic-orchestra-2025-2026.html",
+        "sourcePageUrl": "https://www.thaiticketmajor.com/concert/thailand-philharmonic-orchestra-2025-2026.html",
+        "imageUrl": "https://www.thaiticketmajor.com/img_poster/prefix_1/0505/6505/thailand-philharmonic-orchestra-2025-2026-690482ab98a39-l.png",
+        "description": "ข้อมูลจากหน้า ThaiTicketMajor หมวดคอนเสิร์ต",
+        "ticketNote": "ซื้อบัตร"
+      },
+      {
+        "id": "ticketmelon-higedan-bangkok",
+        "title": "OFFICIAL HIGE DANDISM ASIA TOUR 2026 in BANGKOK",
+        "category": "western",
+        "categoryLabel": "ฝรั่ง",
+        "source": "Ticketmelon",
+        "venue": "UOB LIVE",
+        "saleDate": "2026-06-30T10:00:00+07:00",
+        "saleText": "ตรวจสอบสถานะขายบัตรบนเว็บต้นทาง",
+        "eventDate": "2026-09-06T18:00:00+07:00",
+        "price": "ดูราคาบนเว็บต้นทาง",
+        "status": "onsale",
+        "imageUrl": "https://tm-prod-event-files-v3.ticketmelon.com/fc4b82fc241611f1943101117567899b/poster/b18d7e6329ad11f1967801117567899b.png",
+        "sourcePageUrl": "https://www.ticketmelon.com/viji/higedan",
+        "url": "https://www.ticketmelon.com/viji/higedan",
+        "description": "ข้อมูลจากหน้ารายการงานบน Ticketmelon",
+        "ticketNote": "กดที่มาข้อมูลเพื่อดูรายละเอียดล่าสุดจากเว็บต้นทาง"
+      },
+      {
+        "id": "allticket-asanee-wasan-farewell-charity",
+        "title": "FAREWELL CONCERT อัสนีและวสันต์ (รอบการกุศล)",
+        "category": "thai",
+        "categoryLabel": "ไทย",
+        "source": "AllTicket",
+        "venue": "ตรวจสอบสถานที่บน AllTicket",
+        "saleDate": "2026-06-30T10:00:00+07:00",
+        "saleText": "ตรวจสอบสถานะขายบัตรบนเว็บต้นทาง",
+        "eventDate": "2026-09-08T18:00:00+07:00",
+        "price": "2,000 - 3,500",
+        "status": "soldout",
+        "imageUrl": "https://atkmedia.allticket.com/assets/content/26918/FWC_30032026_TicketCard.jpg",
+        "sourcePageUrl": "https://www.allticket.com/event/Farewell_AsaneeWasan_RAMA",
+        "url": "https://www.allticket.com/event/Farewell_AsaneeWasan_RAMA",
+        "description": "ข้อมูลจากหน้ารายละเอียดงานบน AllTicket",
+        "ticketNote": "กดที่มาข้อมูลเพื่อเปิดหน้ารายละเอียดงานนี้บน AllTicket"
+      },
+      {
+        "id": "allticket-deaw-16-never-grow-up",
+        "title": "DEAW 16 : NEVER GROW UP",
+        "category": "stage",
+        "categoryLabel": "การแสดง",
+        "source": "AllTicket",
+        "venue": "Paragon Hall",
+        "saleDate": "2026-07-04T10:00:00+07:00",
+        "saleText": "Ticket on sale: 4 ก.ค. 2569 10:00 น.",
+        "eventDate": "2026-09-11T19:00:00+07:00",
+        "price": "2,000 - 5,000",
+        "status": "upcoming",
+        "imageUrl": "https://atkmedia.allticket.com/assets/content/26948/04062026DEAW16_Ticketcard.jpg",
+        "sourcePageUrl": "https://www.allticket.com/event/deaw16",
+        "url": "https://www.allticket.com/event/deaw16",
+        "description": "เดี่ยวไมโครโฟน DEAW 16 จัดวันที่ 11-13 และ 17-20 ก.ย. ข้อมูลจากหน้ารายละเอียดงานบน AllTicket",
+        "ticketNote": "กดที่มาข้อมูลเพื่อเปิดหน้ารายละเอียดงานนี้บน AllTicket"
+      },
+      {
+        "id": "eventpop-tokyo-kosei-wind-orchestra",
+        "title": "Tokyo Kosei Wind Orchestra Concert in Bangkok",
+        "category": "western",
+        "categoryLabel": "ฝรั่ง",
+        "source": "Eventpop",
+        "venue": "มหิดลสิทธาคาร (Prince Mahidol Hall), Nakhon Pathom",
+        "saleDate": "2026-06-25T08:00:00+07:00",
+        "saleText": "Early Bird: 25 มิ.ย. - 31 ก.ค. 2569",
+        "eventDate": "2026-09-11T19:00:00+07:00",
+        "price": "ดูราคาบนเว็บต้นทาง",
+        "status": "onsale",
+        "imageUrl": "https://p-u.popcdn.net/event_details/posters/000/155/826/large/aec6627610ad47eacfdbc007146295b0c7db81cd.png?1781256637=",
+        "sourcePageUrl": "https://www.eventpop.me/e/155826/tkwo-in-bkk",
+        "url": "https://www.eventpop.me/e/155826/tkwo-in-bkk",
+        "description": "คอนเสิร์ตวง Tokyo Kosei Wind Orchestra มีรอบวันที่ 11 ก.ย. เวลา 19:00 และ 12 ก.ย. เวลา 15:00 ข้อมูลจาก Eventpop",
+        "ticketNote": "กดที่มาข้อมูลเพื่อดูรายละเอียดล่าสุดจากเว็บต้นทาง"
+      },
+      {
+        "id": "lnt-reirie-1st-solo-live-in-bangkok",
+        "title": "REIRIE 1st SOLO LIVE IN BANGKOK",
+        "category": "western",
+        "categoryLabel": "ฝรั่ง",
+        "source": "Live Nation Tero",
+        "venue": "Lido Connect 3",
+        "saleDate": "2026-07-25T10:00:00+07:00",
+        "saleText": "เริ่มขาย 25 ก.ค. 2569 10:00",
+        "eventDate": "2026-09-19T14:00:00+07:00",
+        "eventDates": [
+          "2026-09-19T14:00:00+07:00"
+        ],
+        "price": "1,800 THB",
+        "url": "https://ticketmaster.co.th/activity/detail/26th_reirie",
+        "sourcePageUrl": "https://ticketmaster.co.th/activity/detail/26th_reirie",
+        "description": "หน้ารายละเอียด Ticketmaster ระบุงาน REIRIE จัดที่ Lido Connect 3 วันที่ 19 Sep 2026 เวลา 02:00 PM และรายละเอียดโปรโมเตอร์ Live Nation Tero",
+        "ticketNote": "เริ่มขาย 25 ก.ค. 2569 10:00",
+        "imageUrl": "https://static.ticketmaster.co.th/images/activity/26th_reirie_55de5b32c1ae9bd26c61a4306a067944.png",
+        "status": "upcoming"
+      },
+      {
+        "id": "ttm-90s-2000s-piano-and-i-concert-grammy-songbook",
+        "title": "ไทยประกันชีวิต Presents 90's-2000's PIANO & i CONCERT : Grammy Songbook",
+        "category": "thai",
+        "categoryLabel": "ไทย",
+        "source": "ThaiTicketMajor",
+        "venue": "อิมแพ็ค อารีน่า เมืองทองธานี",
+        "saleDate": "2026-09-19T18:00:00+07:00",
+        "saleText": "Sold Out",
+        "eventDate": "2026-09-19T18:00:00+07:00",
+        "eventDates": [
+          "2026-09-19T18:00:00+07:00",
+          "2026-09-20T18:00:00+07:00"
+        ],
+        "price": "ดูราคาบนเว็บต้นทาง",
+        "url": "https://www.thaiticketmajor.com/concert/90s-2000s-piano-and-i-concert-grammy-songbook.html",
+        "sourcePageUrl": "https://www.thaiticketmajor.com/concert/90s-2000s-piano-and-i-concert-grammy-songbook.html",
+        "imageUrl": "https://www.thaiticketmajor.com/img_poster/prefix_1/0766/6766/90s-2000s-piano-and-i-concert-grammy-songbook-6a40df06e3c26-l.jpg",
+        "description": "ข้อมูลจากหน้า ThaiTicketMajor หมวดคอนเสิร์ต",
+        "ticketNote": "Sold Out"
+      },
+      {
+        "id": "lnt-ash-da-hero-1st-solo-live-in-bangkok",
+        "title": "ASH DA HERO 1st SOLO LIVE IN BANGKOK",
+        "category": "western",
+        "categoryLabel": "ฝรั่ง",
+        "source": "Live Nation Tero",
+        "venue": "Lido Connect 3",
+        "saleDate": "2026-07-25T10:00:00+07:00",
+        "saleText": "เริ่มขาย 25 ก.ค. 2569 10:00",
+        "eventDate": "2026-09-19T20:00:00+07:00",
+        "eventDates": [
+          "2026-09-19T20:00:00+07:00"
+        ],
+        "price": "1,800 THB",
+        "url": "https://ticketmaster.co.th/activity/detail/26th_ashdahero",
+        "sourcePageUrl": "https://ticketmaster.co.th/activity/detail/26th_ashdahero",
+        "description": "หน้ารายละเอียด Ticketmaster ระบุงาน ASH DA HERO จัดที่ Lido Connect 3 วันที่ 19 Sep 2026 เวลา 08:00 PM และรายละเอียดโปรโมเตอร์ Live Nation Tero",
+        "ticketNote": "เริ่มขาย 25 ก.ค. 2569 10:00",
+        "imageUrl": "https://static.ticketmaster.co.th/images/activity/26th_ashdahero_b859de48fb3751e553fe2ea3da5ec2dd.png",
+        "status": "upcoming"
+      },
+      {
+        "id": "ticketmelon-lonely-loud-fest-2",
+        "title": "Lonely Loud Fest 2",
+        "category": "thai",
+        "categoryLabel": "ไทย",
+        "source": "Ticketmelon",
+        "venue": "Union Hall, Union Mall",
+        "saleDate": "2026-06-30T10:00:00+07:00",
+        "saleText": "ตรวจสอบสถานะขายบัตรบนเว็บต้นทาง",
+        "eventDate": "2026-09-20T18:00:00+07:00",
+        "price": "ดูราคาบนเว็บต้นทาง",
+        "status": "onsale",
+        "imageUrl": "https://tm-prod-event-files-v3.ticketmelon.com/4f5c149e4aac11f1943101117567899b/poster/10790c4b5aff11f1990801117567899b.jpeg",
+        "sourcePageUrl": "https://www.ticketmelon.com/rsshowbizth/LonelyLoudFest2",
+        "url": "https://www.ticketmelon.com/rsshowbizth/LonelyLoudFest2",
+        "description": "ข้อมูลจากหน้ารายการงานบน Ticketmelon",
+        "ticketNote": "กดที่มาข้อมูลเพื่อดูรายละเอียดล่าสุดจากเว็บต้นทาง"
+      },
+      {
+        "id": "ttm-post-malone-presents-the-big-ass-stadium-world-tour",
+        "title": "Post Malone Presents The BIG ASS Stadium World Tour",
+        "category": "western",
+        "categoryLabel": "ฝรั่ง",
+        "source": "ThaiTicketMajor",
+        "venue": "ราชมังคลากีฬาสถาน",
+        "saleDate": "2026-09-22T18:00:00+07:00",
+        "saleText": "ซื้อบัตร",
+        "eventDate": "2026-09-22T18:00:00+07:00",
+        "eventDates": [
+          "2026-09-22T18:00:00+07:00"
+        ],
+        "price": "ดูราคาบนเว็บต้นทาง",
+        "url": "https://www.thaiticketmajor.com/concert/Post-Malone-Presents-The-BIG-ASS-Stadium-World-Tour.html",
+        "sourcePageUrl": "https://www.thaiticketmajor.com/concert/Post-Malone-Presents-The-BIG-ASS-Stadium-World-Tour.html",
+        "imageUrl": "https://www.thaiticketmajor.com/img_poster/prefix_1/0663/6663/Post-Malone-Presents-The-BIG-ASS-Stadium-World-Tour-69ce05970d196-l.jpg",
+        "description": "ข้อมูลจากหน้า ThaiTicketMajor หมวดคอนเสิร์ต",
+        "ticketNote": "ซื้อบัตร"
+      },
+      {
+        "id": "ttm-be-first-world-showcase",
+        "title": "BE:FIRST WORLD SHOWCASE 2026",
+        "category": "korea",
+        "categoryLabel": "เกาหลี",
+        "source": "ThaiTicketMajor",
+        "venue": "สามย่าน มิตรทาวน์ ฮอลล์",
+        "saleDate": "2026-09-25T18:00:00+07:00",
+        "saleText": "ซื้อบัตร",
+        "eventDate": "2026-09-25T18:00:00+07:00",
+        "eventDates": [
+          "2026-09-25T18:00:00+07:00"
+        ],
+        "price": "ดูราคาบนเว็บต้นทาง",
+        "url": "https://www.thaiticketmajor.com/concert/be-first-world-showcase.html",
+        "sourcePageUrl": "https://www.thaiticketmajor.com/concert/be-first-world-showcase.html",
+        "imageUrl": "https://www.thaiticketmajor.com/img_poster/prefix_1/0730/6730/be-first-world-showcase-6a069e12ac3cb-l.png",
+        "description": "ข้อมูลจากหน้า ThaiTicketMajor หมวดคอนเสิร์ต",
+        "ticketNote": "ซื้อบัตร"
+      },
+      {
+        "id": "ttm-rookie-divos-concert",
+        "title": "ROOKIE DIVOS CONCERT",
+        "category": "thai",
+        "categoryLabel": "ไทย",
+        "source": "ThaiTicketMajor",
+        "venue": "BITEC LIVE",
+        "saleDate": "2026-09-26T18:00:00+07:00",
+        "saleText": "ซื้อบัตร",
+        "eventDate": "2026-09-26T18:00:00+07:00",
+        "eventDates": [
+          "2026-09-26T18:00:00+07:00"
+        ],
+        "price": "ดูราคาบนเว็บต้นทาง",
+        "url": "https://www.thaiticketmajor.com/concert/rookie-divos-concert.html",
+        "sourcePageUrl": "https://www.thaiticketmajor.com/concert/rookie-divos-concert.html",
+        "imageUrl": "https://www.thaiticketmajor.com/img_poster/prefix_1/0759/6759/rookie-divos-concert-6a3cdff44cc11-l.png",
+        "description": "ข้อมูลจากหน้า ThaiTicketMajor หมวดคอนเสิร์ต",
+        "ticketNote": "ซื้อบัตร"
+      },
+      {
+        "id": "ttm-ryosuke-yamada-asia-tour-2026-red-y-in-bangkok",
+        "title": "Ryosuke Yamada ASIA TOUR 2026 Red.Y in Bangkok",
+        "category": "korea",
+        "categoryLabel": "เกาหลี",
+        "source": "ThaiTicketMajor",
+        "venue": "ธันเดอร์โดม เมืองทองธานี",
+        "saleDate": "2026-09-26T18:00:00+07:00",
+        "saleText": "ซื้อบัตร",
+        "eventDate": "2026-09-26T18:00:00+07:00",
+        "eventDates": [
+          "2026-09-26T18:00:00+07:00"
+        ],
+        "price": "ดูราคาบนเว็บต้นทาง",
+        "url": "https://www.thaiticketmajor.com/concert/ryosuke-yamada-asia-tour-2026-red-y-in-bangkok.html",
+        "sourcePageUrl": "https://www.thaiticketmajor.com/concert/ryosuke-yamada-asia-tour-2026-red-y-in-bangkok.html",
+        "imageUrl": "https://www.thaiticketmajor.com/img_poster/prefix_1/0776/6776/ryosuke-yamada-asia-tour-2026-red-y-in-bangkok-6a2baf62da26b-l.png",
+        "description": "ข้อมูลจากหน้า ThaiTicketMajor หมวดคอนเสิร์ต",
+        "ticketNote": "ซื้อบัตร"
+      },
+      {
+        "id": "ttm-milli-jaa-ehh-asia-tour-2026",
+        "title": "MILLI JAA EHH! ASIA TOUR 2026",
+        "category": "thai",
+        "categoryLabel": "ไทย",
+        "source": "ThaiTicketMajor",
+        "venue": "สามย่าน มิตรทาวน์ ฮอลล์",
+        "saleDate": "2026-10-03T18:00:00+07:00",
+        "saleText": "ซื้อบัตร",
+        "eventDate": "2026-10-03T18:00:00+07:00",
+        "eventDates": [
+          "2026-10-03T18:00:00+07:00"
+        ],
+        "price": "ดูราคาบนเว็บต้นทาง",
+        "url": "https://www.thaiticketmajor.com/concert/milli-jaa-ehh-asia-tour-2026.html",
+        "sourcePageUrl": "https://www.thaiticketmajor.com/concert/milli-jaa-ehh-asia-tour-2026.html",
+        "imageUrl": "https://www.thaiticketmajor.com/img_poster/prefix_1/0756/6756/milli-jaa-ehh-asia-tour-2026-6a38bc28d4b1d-l.png",
+        "description": "ข้อมูลจากหน้า ThaiTicketMajor หมวดคอนเสิร์ต",
+        "ticketNote": "ซื้อบัตร"
+      },
+      {
+        "id": "ticketmelon-avenged-sevenfold-bangkok",
+        "title": "AVENGED SEVENFOLD ASIA TOUR 2026 In Bangkok",
+        "category": "western",
+        "categoryLabel": "ฝรั่ง",
+        "source": "Ticketmelon",
+        "venue": "Thunder Dome",
+        "saleDate": "2026-06-30T10:00:00+07:00",
+        "saleText": "ตรวจสอบสถานะขายบัตรบนเว็บต้นทาง",
+        "eventDate": "2026-10-06T20:00:00+07:00",
+        "price": "ดูราคาบนเว็บต้นทาง",
+        "status": "onsale",
+        "imageUrl": "https://tm-prod-event-files-v3.ticketmelon.com/8fb42c4230dc11f1922201117567899b/poster/5269762f30de11f1943101117567899b.png",
+        "sourcePageUrl": "https://www.ticketmelon.com/viji/a7x",
+        "url": "https://www.ticketmelon.com/viji/a7x",
+        "description": "ข้อมูลจากหน้ารายการงานบน Ticketmelon",
+        "ticketNote": "กดที่มาข้อมูลเพื่อดูรายละเอียดล่าสุดจากเว็บต้นทาง"
+      },
+      {
+        "id": "ttm-remaster-concert",
+        "title": "REMASTER CONCERT",
+        "category": "western",
+        "categoryLabel": "ฝรั่ง",
+        "source": "ThaiTicketMajor",
+        "venue": "พารากอน ฮอลล์",
+        "saleDate": "2026-10-10T18:00:00+07:00",
+        "saleText": "เร็วๆนี้ / Public Sale 24 ก.ค. 2569, 10:00 น.",
+        "eventDate": "2026-10-10T18:00:00+07:00",
+        "eventDates": [
+          "2026-10-10T18:00:00+07:00"
+        ],
+        "price": "ดูราคาบนเว็บต้นทาง",
+        "url": "https://www.thaiticketmajor.com/concert/remaster-concert.html",
+        "sourcePageUrl": "https://www.thaiticketmajor.com/concert/remaster-concert.html",
+        "imageUrl": "https://www.thaiticketmajor.com/img_poster/prefix_1/0793/6793/remaster-concert-6a45fbd8410ab-l.png",
+        "description": "ข้อมูลจากหน้า ThaiTicketMajor หมวดคอนเสิร์ต",
+        "ticketNote": "เร็วๆนี้"
+      },
+      {
+        "id": "ttm-the-weeknd-after-hours-til-dawn-tour",
+        "title": "The Weeknd: After Hours Til Dawn Tour",
+        "category": "western",
+        "categoryLabel": "ฝรั่ง",
+        "source": "ThaiTicketMajor",
+        "venue": "ราชมังคลากีฬาสถาน",
+        "saleDate": "2026-10-11T18:00:00+07:00",
+        "saleText": "ซื้อบัตร",
+        "eventDate": "2026-10-11T18:00:00+07:00",
+        "eventDates": [
+          "2026-10-11T18:00:00+07:00",
+          "2026-10-12T18:00:00+07:00",
+          "2026-10-13T18:00:00+07:00"
+        ],
+        "price": "ดูราคาบนเว็บต้นทาง",
+        "url": "https://www.thaiticketmajor.com/concert/the-weeknd-after-hours--til-dawn-tour.html",
+        "sourcePageUrl": "https://www.thaiticketmajor.com/concert/the-weeknd-after-hours--til-dawn-tour.html",
+        "imageUrl": "https://www.thaiticketmajor.com/img_poster/prefix_1/0716/6716/the-weeknd-after-hours--til-dawn-tour-6a2267a308c78-l.png",
+        "description": "ข้อมูลจากหน้า ThaiTicketMajor หมวดคอนเสิร์ต",
+        "ticketNote": "ซื้อบัตร"
+      },
+      {
+        "id": "allticket-big-wildlife-khao-yai",
+        "title": "BIG WILDLIFE KHAO YAI",
+        "category": "thai",
+        "categoryLabel": "ไทย",
+        "source": "AllTicket",
+        "venue": "Khao Yai",
+        "saleDate": "2026-06-30T10:00:00+07:00",
+        "saleText": "ตรวจสอบสถานะขายบัตรบนเว็บต้นทาง",
+        "eventDate": "2026-10-16T18:00:00+07:00",
+        "price": "Early Bird 990",
+        "status": "onsale",
+        "imageUrl": "https://atkmedia.allticket.com/assets/content/26051/100426BW_Ticketcard.jpg",
+        "sourcePageUrl": "https://www.allticket.com/event/BIGWILDLIFEKHAOYAI",
+        "url": "https://www.allticket.com/event/BIGWILDLIFEKHAOYAI",
+        "description": "ข้อมูลจากหน้ารายละเอียดงานบน AllTicket",
+        "ticketNote": "กดที่มาข้อมูลเพื่อเปิดหน้ารายละเอียดงานนี้บน AllTicket"
+      },
+      {
+        "id": "allticket-khon-kaen-festival",
+        "title": "Khon kaen Festival",
+        "category": "thai",
+        "categoryLabel": "ไทย",
+        "source": "AllTicket",
+        "venue": "Khon Kaen",
+        "saleDate": "2026-06-30T10:00:00+07:00",
+        "saleText": "ตรวจสอบสถานะขายบัตรบนเว็บต้นทาง",
+        "eventDate": "2026-10-16T18:00:00+07:00",
+        "price": "Pre-Early Bird 499",
+        "status": "onsale",
+        "imageUrl": "https://atkmedia.allticket.com/assets/content/26059/29042026KKF_Ticketcard.jpg",
+        "sourcePageUrl": "https://www.allticket.com/event/KhonkaenFestival",
+        "url": "https://www.allticket.com/event/KhonkaenFestival",
+        "description": "เทศกาลจัดวันที่ 16-17 ต.ค. ข้อมูลจากหน้ารายละเอียดงานบน AllTicket",
+        "ticketNote": "กดที่มาข้อมูลเพื่อเปิดหน้ารายละเอียดงานนี้บน AllTicket",
+        "eventDates": [
+          "2026-10-16T18:00:00+07:00",
+          "2026-10-17T18:00:00+07:00"
+        ]
+      },
+      {
+        "id": "allticket-nexora-card-fest",
+        "title": "NEXORA CARD FEST",
+        "category": "thai",
+        "categoryLabel": "ไทย",
+        "source": "AllTicket",
+        "venue": "ตรวจสอบสถานที่บน AllTicket",
+        "saleDate": "2026-06-30T10:00:00+07:00",
+        "saleText": "ตรวจสอบสถานะขายบัตรบนเว็บต้นทาง",
+        "eventDate": "2026-10-24T18:00:00+07:00",
+        "price": "1,500 - 4,500",
+        "status": "onsale",
+        "imageUrl": "https://atkmedia.allticket.com/assets/content/26081/210626NEXORA_Ticketcard.jpg",
+        "sourcePageUrl": "https://www.allticket.com/event/NEXORACARDFEST",
+        "url": "https://www.allticket.com/event/NEXORACARDFEST",
+        "description": "NEXORA CARD FEST วันที่ 24 ต.ค. 2569 ข้อมูลจากหน้ารายละเอียดงานบน AllTicket",
+        "ticketNote": "กดที่มาข้อมูลเพื่อเปิดหน้ารายละเอียดงานนี้บน AllTicket"
+      },
+      {
+        "id": "ticketmelon-jason-mraz-bangkok",
+        "title": "Jason Mraz Live In Bangkok 2026",
+        "category": "western",
+        "categoryLabel": "ฝรั่ง",
+        "source": "Ticketmelon",
+        "venue": "BITEC Live",
+        "saleDate": "2026-06-30T10:00:00+07:00",
+        "saleText": "ตรวจสอบสถานะขายบัตรบนเว็บต้นทาง",
+        "eventDate": "2026-10-29T20:00:00+07:00",
+        "price": "ดูราคาบนเว็บต้นทาง",
+        "status": "onsale",
+        "imageUrl": "https://tm-prod-event-files-v3.ticketmelon.com/112108aa52e611f1922201117567899b/poster/7345c1bb579f11f1990801117567899b.png",
+        "sourcePageUrl": "https://www.ticketmelon.com/odrock/jasonmrazliveinbkk2026",
+        "url": "https://www.ticketmelon.com/odrock/jasonmrazliveinbkk2026",
+        "description": "ข้อมูลจากหน้ารายการงานบน Ticketmelon",
+        "ticketNote": "กดที่มาข้อมูลเพื่อดูรายละเอียดล่าสุดจากเว็บต้นทาง"
+      },
+      {
+        "id": "ttm-26th-zaralarsson",
+        "title": "Zara Larsson - Midnight Sun Tour in Bangkok",
+        "category": "western",
+        "categoryLabel": "ฝรั่ง",
+        "source": "ThaiTicketMajor",
+        "venue": "ยูโอบี ไลฟ์, เอ็มสเฟียร์",
+        "saleDate": "2026-11-01T18:00:00+07:00",
+        "saleText": "เร็วๆนี้ / Pre-sale 20 ก.ค. 2569, 10:00 น. / Pre-sale 21 ก.ค. 2569, 10:00 น. / Pre-sale 22 ก.ค. 2569, 12:00 น. / Public Sale 24 ก.ค. 2569, 10:00 น.",
+        "eventDate": "2026-11-01T18:00:00+07:00",
+        "eventDates": [
+          "2026-11-01T18:00:00+07:00"
+        ],
+        "price": "ดูราคาบนเว็บต้นทาง",
+        "url": "https://ticketmaster.co.th/activity/detail/26th_zaralarsson",
+        "sourcePageUrl": "https://ticketmaster.co.th/activity/detail/26th_zaralarsson",
+        "imageUrl": "https://www.thaiticketmajor.com/img_poster/prefix_1/0797/6797/zara-larsson-6a41e91c71a55-l.png",
+        "description": "ข้อมูลจากหน้า ThaiTicketMajor หมวดคอนเสิร์ต",
+        "ticketNote": "เร็วๆนี้"
+      },
+      {
+        "id": "allticket-glamping-festival-2026",
+        "title": "Glamping Festival 2026",
+        "category": "thai",
+        "categoryLabel": "ไทย",
+        "source": "AllTicket",
+        "venue": "ตรวจสอบสถานที่บน AllTicket",
+        "saleDate": "2026-06-30T10:00:00+07:00",
+        "saleText": "ตรวจสอบสถานะขายบัตรบนเว็บต้นทาง",
+        "eventDate": "2026-11-06T18:00:00+07:00",
+        "price": "1,500 - 25,000",
+        "status": "onsale",
+        "imageUrl": "https://atkmedia.allticket.com/assets/content/21275/260626GP_Ticketcard.jpg",
+        "sourcePageUrl": "https://www.allticket.com/event/GlampingFestival",
+        "url": "https://www.allticket.com/event/GlampingFestival",
+        "description": "เทศกาลจัดวันที่ 6-7 พ.ย. ข้อมูลจากหน้ารายละเอียดงานบน AllTicket",
+        "ticketNote": "กดที่มาข้อมูลเพื่อเปิดหน้ารายละเอียดงานนี้บน AllTicket",
+        "eventDates": [
+          "2026-11-06T18:00:00+07:00",
+          "2026-11-07T18:00:00+07:00"
+        ]
+      },
+      {
+        "id": "ttm-2026-27-babymonster-world-tour-choom-in-bangkok",
+        "title": "2026'27 BABYMONSTER WORLD TOUR [CHOOM] IN BANGKOK",
+        "category": "korea",
+        "categoryLabel": "เกาหลี",
+        "source": "ThaiTicketMajor",
+        "venue": "อิมแพ็ค อารีน่า เมืองทองธานี",
+        "saleDate": "2026-11-07T18:00:00+07:00",
+        "saleText": "ซื้อบัตร",
+        "eventDate": "2026-11-07T18:00:00+07:00",
+        "eventDates": [
+          "2026-11-07T18:00:00+07:00",
+          "2026-11-08T18:00:00+07:00"
+        ],
+        "price": "ดูราคาบนเว็บต้นทาง",
+        "url": "https://www.thaiticketmajor.com/concert/2026-27-babymonster-world-tour-choom-in-bangkok.html",
+        "sourcePageUrl": "https://www.thaiticketmajor.com/concert/2026-27-babymonster-world-tour-choom-in-bangkok.html",
+        "imageUrl": "https://www.thaiticketmajor.com/img_poster/prefix_1/0737/6737/2026-27-babymonster-world-tour-choom-in-bangkok-6a041a792bc48-l.png",
+        "description": "ข้อมูลจากหน้า ThaiTicketMajor หมวดคอนเสิร์ต",
+        "ticketNote": "ซื้อบัตร"
+      },
+      {
+        "id": "ttm-5sos-everyones-a-star-world-tour",
+        "title": "5 SECONDS OF SUMMER: EVERYONE'S A STAR! WORLD TOUR",
+        "category": "western",
+        "categoryLabel": "ฝรั่ง",
+        "source": "ThaiTicketMajor",
+        "venue": "ยูโอบี ไลฟ์, เอ็มสเฟียร์",
+        "saleDate": "2026-11-09T18:00:00+07:00",
+        "saleText": "ซื้อบัตร",
+        "eventDate": "2026-11-09T18:00:00+07:00",
+        "eventDates": [
+          "2026-11-09T18:00:00+07:00"
+        ],
+        "price": "ดูราคาบนเว็บต้นทาง",
+        "url": "https://www.thaiticketmajor.com/concert/5SOS-EVERYONES-A-STAR-WORLD-TOUR.html",
+        "sourcePageUrl": "https://www.thaiticketmajor.com/concert/5SOS-EVERYONES-A-STAR-WORLD-TOUR.html",
+        "imageUrl": "https://www.thaiticketmajor.com/img_poster/prefix_1/0698/6698/5SOS-EVERYONES-A-STAR-WORLD-TOUR-69eb1ce14bd3b-l.png",
+        "description": "ข้อมูลจากหน้า ThaiTicketMajor หมวดคอนเสิร์ต",
+        "ticketNote": "ซื้อบัตร"
+      },
+      {
+        "id": "ttm-lany-soft-world-tour-bangkok",
+        "title": "LANY : soft world tour Bangkok",
+        "category": "western",
+        "categoryLabel": "ฝรั่ง",
+        "source": "ThaiTicketMajor",
+        "venue": "ยูโอบี ไลฟ์, เอ็มสเฟียร์",
+        "saleDate": "2026-11-10T18:00:00+07:00",
+        "saleText": "ซื้อบัตร",
+        "eventDate": "2026-11-10T18:00:00+07:00",
+        "eventDates": [
+          "2026-11-10T18:00:00+07:00"
+        ],
+        "price": "ดูราคาบนเว็บต้นทาง",
+        "url": "https://www.thaiticketmajor.com/concert/lany-soft-world-tour-bangkok.html",
+        "sourcePageUrl": "https://www.thaiticketmajor.com/concert/lany-soft-world-tour-bangkok.html",
+        "imageUrl": "https://www.thaiticketmajor.com/img_poster/prefix_1/0642/6642/lany-soft-world-tour-bangkok-69b785fa378df-l.png",
+        "description": "ข้อมูลจากหน้า ThaiTicketMajor หมวดคอนเสิร์ต",
+        "ticketNote": "ซื้อบัตร"
+      },
+      {
+        "id": "ttm-wave-to-earth-the-pieces-tour",
+        "title": "wave to earth - the pieces tour",
+        "category": "western",
+        "categoryLabel": "ฝรั่ง",
+        "source": "ThaiTicketMajor",
+        "venue": "ยูโอบี ไลฟ์, เอ็มสเฟียร์",
+        "saleDate": "2026-11-12T18:00:00+07:00",
+        "saleText": "ซื้อบัตร",
+        "eventDate": "2026-11-12T18:00:00+07:00",
+        "eventDates": [
+          "2026-11-12T18:00:00+07:00"
+        ],
+        "price": "ดูราคาบนเว็บต้นทาง",
+        "url": "https://www.thaiticketmajor.com/concert/wave-to-earth-the-pieces-tour.html",
+        "sourcePageUrl": "https://www.thaiticketmajor.com/concert/wave-to-earth-the-pieces-tour.html",
+        "imageUrl": "https://www.thaiticketmajor.com/img_poster/prefix_1/0742/6742/wave-to-earth-the-pieces-tour-6a44940fab198-l.png",
+        "description": "ข้อมูลจากหน้า ThaiTicketMajor หมวดคอนเสิร์ต",
+        "ticketNote": "ซื้อบัตร"
+      },
+      {
+        "id": "allticket-mon-hak-thai-lom-music-festival",
+        "title": "มนต์ฮักไทหล่ม Music Festival",
+        "category": "thai",
+        "categoryLabel": "ไทย",
+        "source": "AllTicket",
+        "venue": "ตรวจสอบสถานที่บน AllTicket",
+        "saleDate": "2026-06-30T10:00:00+07:00",
+        "saleText": "ตรวจสอบสถานะขายบัตรบนเว็บต้นทาง",
+        "eventDate": "2026-11-19T18:00:00+07:00",
+        "price": "699",
+        "status": "onsale",
+        "imageUrl": "https://atkmedia.allticket.com/assets/content/26070/19052026MHT_Ticketcard.jpg",
+        "sourcePageUrl": "https://www.allticket.com/event/MonHakThaiLom",
+        "url": "https://www.allticket.com/event/MonHakThaiLom",
+        "description": "ข้อมูลจากหน้ารายละเอียดงานบน AllTicket",
+        "ticketNote": "กดที่มาข้อมูลเพื่อเปิดหน้ารายละเอียดงานนี้บน AllTicket"
+      },
+      {
+        "id": "ttm-joji-solaris-tour-2026",
+        "title": "JOJI : SOLARIS",
+        "category": "western",
+        "categoryLabel": "ฝรั่ง",
+        "source": "ThaiTicketMajor",
+        "venue": "อิมแพ็ค เอ็กซิบิชั่น ฮอลล์ 5, เมืองทองธานี",
+        "saleDate": "2026-11-24T18:00:00+07:00",
+        "saleText": "ซื้อบัตร",
+        "eventDate": "2026-11-24T18:00:00+07:00",
+        "eventDates": [
+          "2026-11-24T18:00:00+07:00"
+        ],
+        "price": "ดูราคาบนเว็บต้นทาง",
+        "url": "https://www.thaiticketmajor.com/concert/joji-solaris-tour-2026.html",
+        "sourcePageUrl": "https://www.thaiticketmajor.com/concert/joji-solaris-tour-2026.html",
+        "imageUrl": "https://www.thaiticketmajor.com/img_poster/prefix_1/0693/6693/joji-solaris-tour-2026-69e7091d1fdca-l.png",
+        "description": "ข้อมูลจากหน้า ThaiTicketMajor หมวดคอนเสิร์ต",
+        "ticketNote": "ซื้อบัตร"
+      },
+      {
+        "id": "eventpop-metaphor-orchestra",
+        "title": "Metaphor Orchestra Concert",
+        "category": "western",
+        "categoryLabel": "ฝรั่ง",
+        "source": "Eventpop",
+        "venue": "Prince Mahidol Hall, Mahidol University",
+        "saleDate": "2026-06-30T10:00:00+07:00",
+        "saleText": "ตรวจสอบสถานะขายบัตรบนเว็บต้นทาง",
+        "eventDate": "2026-11-28T15:00:00+07:00",
+        "price": "1,200 - 3,000 บาท",
+        "status": "onsale",
+        "imageUrl": "https://p-u.popcdn.net/event_details/posters/000/152/837/large/955156b42c8c3621ffc381a5f19c99dbe8f17395.jpg?1780560341=",
+        "sourcePageUrl": "https://www.eventpop.me/e/152837/metaphorconcert",
+        "url": "https://www.eventpop.me/e/152837/metaphorconcert",
+        "description": "คอนเสิร์ตออร์เคสตราเพลงจากเกม Metaphor: ReFantazio จัดนอกญี่ปุ่นครั้งแรก ข้อมูลจาก Eventpop",
+        "ticketNote": "กดที่มาข้อมูลเพื่อดูรายละเอียดล่าสุดจากเว็บต้นทาง"
+      },
+      {
+        "id": "allticket-what-are-yu-doing-katanyu",
+        "title": "WHAT ARE YU DOING? (KATANYU STAND-UP COMEDY)",
+        "category": "stage",
+        "categoryLabel": "การแสดง",
+        "source": "AllTicket",
+        "venue": "ตรวจสอบสถานที่บน AllTicket",
+        "saleDate": "2026-06-30T10:00:00+07:00",
+        "saleText": "ตรวจสอบสถานะขายบัตรบนเว็บต้นทาง",
+        "eventDate": "2026-11-28T18:00:00+07:00",
+        "price": "1,000",
+        "status": "onsale",
+        "imageUrl": "https://atkmedia.allticket.com/assets/content/26080/Katanyu_16062026_TicketCard.jpg",
+        "sourcePageUrl": "https://www.allticket.com/event/KATANYUCOMEDY",
+        "url": "https://www.allticket.com/event/KATANYUCOMEDY",
+        "description": "ข้อมูลจากหน้ารายละเอียดงานบน AllTicket",
+        "ticketNote": "กดที่มาข้อมูลเพื่อเปิดหน้ารายละเอียดงานนี้บน AllTicket"
+      },
+      {
+        "id": "ticketmelon-kings-of-convenience",
+        "title": "Maho Rasop Series: Kings of Convenience by HAVE YOU HEARD?",
+        "category": "western",
+        "categoryLabel": "ฝรั่ง",
+        "source": "Ticketmelon",
+        "venue": "SiamPic Hall",
+        "saleDate": "2026-06-30T10:00:00+07:00",
+        "saleText": "ตรวจสอบสถานะขายบัตรบนเว็บต้นทาง",
+        "eventDate": "2026-12-01T20:00:00+07:00",
+        "price": "ดูราคาบนเว็บต้นทาง",
+        "status": "onsale",
+        "imageUrl": "https://tm-prod-event-files-v3.ticketmelon.com/5754f0a65ff611f1915501117567899b/poster/fe26880763d111f1923401117567899b.jpeg",
+        "sourcePageUrl": "https://www.ticketmelon.com/hyhbkk/koc",
+        "url": "https://www.ticketmelon.com/hyhbkk/koc",
+        "description": "ข้อมูลจากหน้ารายการงานบน Ticketmelon",
+        "ticketNote": "กดที่มาข้อมูลเพื่อดูรายละเอียดล่าสุดจากเว็บต้นทาง"
+      },
+      {
+        "id": "ttm-bts-world-tour-arirang-in-bangkok",
+        "title": "BTS WORLD TOUR 'ARIRANG' IN BANGKOK",
+        "category": "korea",
+        "categoryLabel": "เกาหลี",
+        "source": "ThaiTicketMajor",
+        "venue": "ราชมังคลากีฬาสถาน",
+        "saleDate": "2026-12-03T18:00:00+07:00",
+        "saleText": "Sold Out",
+        "eventDate": "2026-12-03T18:00:00+07:00",
+        "eventDates": [
+          "2026-12-03T18:00:00+07:00",
+          "2026-12-05T18:00:00+07:00",
+          "2026-12-06T18:00:00+07:00"
+        ],
+        "price": "ดูราคาบนเว็บต้นทาง",
+        "url": "https://www.thaiticketmajor.com/concert/bts-world-tour-arirang-in-bangkok.html",
+        "sourcePageUrl": "https://www.thaiticketmajor.com/concert/bts-world-tour-arirang-in-bangkok.html",
+        "imageUrl": "https://www.thaiticketmajor.com/img_poster/prefix_1/0749/6749/bts-world-tour-arirang-in-bangkok-6a0fd73c8f65b-l.png",
+        "description": "ข้อมูลจากหน้า ThaiTicketMajor หมวดคอนเสิร์ต",
+        "ticketNote": "Sold Out"
+      },
+      {
+        "id": "ttm-dreaming-tomohisa-yamashita-tour-2026-live-in-bangkok",
+        "title": "DREAMING TOMOHISA YAMASHITA TOUR 2026 LIVE in BANGKOK",
+        "category": "korea",
+        "categoryLabel": "เกาหลี",
+        "source": "ThaiTicketMajor",
+        "venue": "ยูเนี่ยน ฮอลล์, ศูนย์การค้ายูเนี่ยน มอลล์",
+        "saleDate": "2026-12-19T18:00:00+07:00",
+        "saleText": "เร็วๆนี้ / Public Sale 18 ก.ค. 2569, 10:00 น.",
+        "eventDate": "2026-12-19T18:00:00+07:00",
+        "eventDates": [
+          "2026-12-19T18:00:00+07:00"
+        ],
+        "price": "ดูราคาบนเว็บต้นทาง",
+        "url": "https://www.thaiticketmajor.com/concert/dreaming-tomohisa-yamashita-tour-2026-live-in-bangkok.html",
+        "sourcePageUrl": "https://www.thaiticketmajor.com/concert/dreaming-tomohisa-yamashita-tour-2026-live-in-bangkok.html",
+        "imageUrl": "https://www.thaiticketmajor.com/img_poster/prefix_1/0794/6794/dreaming-tomohisa-yamashita-tour-2026-live-in-bangkok-6a3cb02a078f4-l.png",
+        "description": "ข้อมูลจากหน้า ThaiTicketMajor หมวดคอนเสิร์ต",
+        "ticketNote": "เร็วๆนี้"
+      },
+      {
+        "id": "allticket-chiangkhan-festival-4",
+        "title": "Chiangkhan Festival 4",
+        "category": "thai",
+        "categoryLabel": "ไทย",
+        "source": "AllTicket",
+        "venue": "Chiangkhan",
+        "saleDate": "2026-06-30T10:00:00+07:00",
+        "saleText": "ตรวจสอบสถานะขายบัตรบนเว็บต้นทาง",
+        "eventDate": "2026-12-25T18:00:00+07:00",
+        "price": "Pre-Early Bird 890",
+        "status": "onsale",
+        "imageUrl": "https://atkmedia.allticket.com/assets/content/26042/CK4_20032026_TicketCard.jpg",
+        "sourcePageUrl": "https://www.allticket.com/event/ChiangkhanFestival",
+        "url": "https://www.allticket.com/event/ChiangkhanFestival",
+        "description": "เทศกาลจัดวันที่ 25-26 ธ.ค. ข้อมูลจากหน้ารายละเอียดงานบน AllTicket",
+        "ticketNote": "กดที่มาข้อมูลเพื่อเปิดหน้ารายละเอียดงานนี้บน AllTicket",
+        "eventDates": [
+          "2026-12-25T18:00:00+07:00",
+          "2026-12-26T18:00:00+07:00"
+        ]
+      },
+      {
+        "id": "ttm-fujii-kaze-prema-world-tour",
+        "title": "FUJII KAZE PREMA WORLD TOUR",
+        "category": "korea",
+        "categoryLabel": "เกาหลี",
+        "source": "ThaiTicketMajor",
+        "venue": "สนามกีฬาแห่งชาติ ศุภชลาศัย",
+        "saleDate": "2026-12-26T18:00:00+07:00",
+        "saleText": "ซื้อบัตร",
+        "eventDate": "2026-12-26T18:00:00+07:00",
+        "eventDates": [
+          "2026-12-26T18:00:00+07:00"
+        ],
+        "price": "ดูราคาบนเว็บต้นทาง",
+        "url": "https://www.thaiticketmajor.com/concert/Fujii-Kaze-Prema-World-Tour.html",
+        "sourcePageUrl": "https://www.thaiticketmajor.com/concert/Fujii-Kaze-Prema-World-Tour.html",
+        "imageUrl": "https://www.thaiticketmajor.com/img_poster/prefix_1/0768/6768/Fujii-Kaze-Prema-World-Tour-6a2644afbc7b9-l.png",
+        "description": "ข้อมูลจากหน้า ThaiTicketMajor หมวดคอนเสิร์ต",
+        "ticketNote": "ซื้อบัตร"
+      },
+      {
+        "id": "allticket-huai-rai-eeleena-festival-5",
+        "title": "ห้วยไร่ อีหลีน่า เฟสติวัล 5",
+        "category": "thai",
+        "categoryLabel": "ไทย",
+        "source": "AllTicket",
+        "venue": "ตรวจสอบสถานที่บน AllTicket",
+        "saleDate": "2026-06-30T10:00:00+07:00",
+        "saleText": "ตรวจสอบสถานะขายบัตรบนเว็บต้นทาง",
+        "eventDate": "2027-01-16T18:00:00+07:00",
+        "price": "1,500",
+        "status": "soldout",
+        "imageUrl": "https://atkmedia.allticket.com/assets/content/26062/190526HR_Ticketcard.jpg",
+        "sourcePageUrl": "https://www.allticket.com/event/Huayraiarena5",
+        "url": "https://www.allticket.com/event/Huayraiarena5",
+        "description": "เทศกาลจัดวันที่ 16-17 ม.ค. 2570 ข้อมูลจากหน้ารายละเอียดงานบน AllTicket",
+        "ticketNote": "กดที่มาข้อมูลเพื่อเปิดหน้ารายละเอียดงานนี้บน AllTicket",
+        "eventDates": [
+          "2027-01-16T18:00:00+07:00",
+          "2027-01-17T18:00:00+07:00"
+        ]
+      }
+    ];
+    let events = [...sampleEvents];
+
+    const state = {
+      category: "all",
+      month: currentMonthKey(),
+      source: "all",
+      query: ""
+    };
+
+    const monthNames = new Intl.DateTimeFormat("th-TH", { month: "long", year: "numeric" });
+    const shortMonthNames = ["ม.ค.", "ก.พ.", "มี.ค.", "เม.ย.", "พ.ค.", "มิ.ย.", "ก.ค.", "ส.ค.", "ก.ย.", "ต.ค.", "พ.ย.", "ธ.ค."];
+    const dateTime = new Intl.DateTimeFormat("th-TH", {
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit"
+    });
+
+    const monthKey = date => date.slice(0, 7);
+    const sourceUrls = {
+      "ThaiTicketMajor": "https://www.thaiticketmajor.com/",
+      "Ticketmelon": "https://www.ticketmelon.com/",
+      "Eventpop": "https://www.eventpop.me/",
+      "AllTicket": "https://www.allticket.com/",
+      "Live Nation Tero": "https://www.livenationtero.co.th/"
+    };
+
+    function monthLabel(key) {
+      const [year, month] = key.split("-").map(Number);
+      return monthNames.format(new Date(year, month - 1, 1));
+    }
+
+    function shortMonthLabel(key) {
+      const [, month] = key.split("-").map(Number);
+      return shortMonthNames[month - 1] || key;
+    }
+
+    function currentMonthKey() {
+      const today = new Date();
+      return `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}`;
+    }
+
+    function formatDate(value) {
+      return dateTime.format(new Date(value)).replace(" น.", "");
+    }
+
+    function formatSaleDate(event) {
+      return event.saleText || formatDate(event.saleDate);
+    }
+
+    function priceLabel(event) {
+      const price = String(event.price || "ดูราคาบนเว็บต้นทาง");
+      if (!/\d/.test(price)) return price;
+      if (/บาท|THB|฿|Early Bird|Pre[- ]?Sale|Pre[- ]?Early Bird|Live Streaming/i.test(price)) return price;
+      return `เริ่ม ${price} บาท`;
+    }
+
+    function detailUrl(event) {
+      const candidates = [event.sourcePageUrl, event.waitingUrl, event.ticketUrl, event.detailUrl, event.url].filter(Boolean);
+      const url = candidates.find(candidate => candidate !== "#" && !isSourceHomeUrl(candidate, event.source));
+      if (url) return url;
+      return "";
+    }
+
+    function isSourceHomeUrl(url, source) {
+      const sourceHome = sourceUrls[source];
+      if (!sourceHome) return false;
+      try {
+        const current = new URL(url);
+        const home = new URL(sourceHome);
+        const currentPath = current.pathname.replace(/\/$/, "");
+        const homePath = home.pathname.replace(/\/$/, "");
+        return current.hostname === home.hostname && currentPath === homePath;
+      } catch {
+        return url.replace(/\/$/, "") === sourceHome.replace(/\/$/, "");
+      }
+    }
+
+    function hasDirectDetailUrl(event) {
+      return Boolean(detailUrl(event));
+    }
+
+    function detailButtonText(event) {
+      if (!hasDirectDetailUrl(event)) return "ยังไม่มีลิงก์หน้าที่ดึงข้อมูล";
+      return event.status === "upcoming" ? "เปิดหน้าที่ดึงข้อมูล / รอเปิดขาย" : "เปิดหน้าที่ดึงข้อมูล";
+    }
+
+    function detailAction(event) {
+      const url = detailUrl(event);
+      if (!url) {
+        return `<button class="link" type="button" aria-disabled="true" disabled>${escapeHtml(detailButtonText(event))}</button>`;
+      }
+      return `<a class="link" href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(detailButtonText(event))}</a>`;
+    }
+
+    function referenceLabel(event) {
+      if (event.sourcePageUrl) return "หน้าอ้างอิงข้อมูล";
+      if (event.waitingUrl) return "หน้ารอเปิดขายของเว็บต้นทาง";
+      if (event.detailUrl || event.ticketUrl) return "หน้ารายละเอียดของเว็บต้นทาง";
+      if (detailUrl(event)) return "เว็บต้นทาง";
+      return "ข้อมูลตัวอย่างในเครื่อง";
+    }
+
+    function referenceMarkup(event) {
+      const url = detailUrl(event);
+      if (!url) return `<strong>ข้อมูลตัวอย่างในเครื่อง</strong>`;
+      return `<strong><a href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(referenceLabel(event))}</a></strong>`;
+    }
+
+    function escapeHtml(value) {
+      return String(value ?? "").replace(/[&<>"']/g, char => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#39;"
+      }[char]));
+    }
+
+    function statusLabel(status) {
+      return {
+        onsale: "กำลังขาย",
+        upcoming: "รอเปิดขาย",
+        soldout: "บัตรหมด"
+      }[status] || "รอตรวจสอบ";
+    }
+
+    function eventId(event) {
+      return event.id || `${event.source}-${event.title}-${event.eventDate}`;
+    }
+
+    function todayStart() {
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      return today;
+    }
+
+    function isCurrentOrFutureEvent(event) {
+      const date = new Date(event.eventDate);
+      if (Number.isNaN(date.getTime())) return true;
+      return date >= todayStart();
+    }
+
+    function visibleEvents() {
+      return events.filter(isCurrentOrFutureEvent);
+    }
+
+    function populateFilters() {
+      const activeEvents = visibleEvents();
+      const months = [...new Set(activeEvents.map(event => monthKey(event.eventDate)))].sort();
+      const sources = [...new Set(activeEvents.map(event => event.source))].sort();
+      const selectedMonth = state.month;
+      const selectedSource = state.source;
+
+      state.month = selectedMonth !== "all" && months.includes(selectedMonth) ? selectedMonth : (months.includes(currentMonthKey()) ? currentMonthKey() : "all");
+      state.source = selectedSource !== "all" && sources.includes(selectedSource) ? selectedSource : "all";
+    }
+
+    async function loadEvents() {
+      if (location.protocol === "file:") return sampleEvents;
+
+      try {
+        const response = await fetch("/api/events", { headers: { "Accept": "application/json" } });
+        if (!response.ok) throw new Error(`API returned ${response.status}`);
+        const data = await response.json();
+        return Array.isArray(data.events) ? data.events : sampleEvents;
+      } catch (error) {
+        console.warn("Using sample events because the API is unavailable.", error);
+        return sampleEvents;
+      }
+    }
+
+    function getFilteredEvents() {
+      const query = state.query.trim().toLowerCase();
+      return visibleEvents()
+        .filter(event => state.category === "all" || event.category === state.category)
+        .filter(event => state.month === "all" || monthKey(event.eventDate) === state.month)
+        .filter(event => state.source === "all" || event.source === state.source)
+        .filter(event => {
+          if (!query) return true;
+          return [event.title, event.venue, event.source, event.categoryLabel].join(" ").toLowerCase().includes(query);
+        })
+        .sort((a, b) => new Date(a.eventDate) - new Date(b.eventDate));
+    }
+
+    function eventCard(event) {
+      const id = escapeHtml(eventId(event));
+      const url = detailUrl(event);
+      const image = event.imageUrl ? `<img src="${escapeHtml(event.imageUrl)}" alt="" loading="lazy">` : "";
+      const poster = `<div class="poster ${event.category}${event.imageUrl ? " has-image" : ""}" aria-hidden="true">${image}<span>${event.categoryLabel}<br>${event.source}</span></div>`;
+      const linkedPoster = url ? `<a class="poster-link" href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer" aria-label="เปิดหน้าอ้างอิง ${escapeHtml(event.title)}">${poster}</a>` : poster;
+      const title = url ? `<a class="title-link" href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(event.title)}</a>` : escapeHtml(event.title);
+      return `
+        <article class="card">
+          ${linkedPoster}
+          <div class="card-body">
+            <div class="meta-row">
+              <span class="badge ${event.category}">${event.categoryLabel}</span>
+              <span class="source">${event.source}</span>
+            </div>
+            <div>
+              <h4>${title}</h4>
+              <p class="venue">${event.venue}</p>
+            </div>
+            <div class="date-grid">
+              <div class="date-item"><span>ขายบัตร</span><strong>${escapeHtml(formatSaleDate(event))}</strong></div>
+              <div class="date-item"><span>วันจัดงาน</span><strong>${formatDate(event.eventDate)}</strong></div>
+            </div>
+            <div class="actions">
+              <span class="price">${escapeHtml(priceLabel(event))}</span>
+              <button class="ghost-button" type="button" data-event-id="${id}" aria-label="ดูรายละเอียด ${escapeHtml(event.title)}">รายละเอียด</button>
+            </div>
+          </div>
+        </article>
+      `;
+    }
+
+    function findEventById(id) {
+      return events.find(event => eventId(event) === id);
+    }
+
+    function sourceFilterBaseEvents() {
+      const query = state.query.trim().toLowerCase();
+      return visibleEvents()
+        .filter(event => state.category === "all" || event.category === state.category)
+        .filter(event => state.month === "all" || monthKey(event.eventDate) === state.month)
+        .filter(event => {
+          if (!query) return true;
+          return [event.title, event.venue, event.source, event.categoryLabel].join(" ").toLowerCase().includes(query);
+        });
+    }
+
+    function monthFilterBaseEvents() {
+      const query = state.query.trim().toLowerCase();
+      return visibleEvents()
+        .filter(event => state.category === "all" || event.category === state.category)
+        .filter(event => state.source === "all" || event.source === state.source)
+        .filter(event => {
+          if (!query) return true;
+          return [event.title, event.venue, event.source, event.categoryLabel].join(" ").toLowerCase().includes(query);
+        });
+    }
+
+    function renderSourceFilter() {
+      const baseEvents = sourceFilterBaseEvents();
+      const counts = baseEvents.reduce((acc, event) => {
+        acc[event.source] = (acc[event.source] || 0) + 1;
+        return acc;
+      }, {});
+      if (state.source !== "all" && !counts[state.source]) counts[state.source] = 0;
+      const sources = Object.keys(counts).sort();
+      const total = baseEvents.length;
+      const panel = document.querySelector("#sourceFilterPanel");
+
+      panel.innerHTML = [
+        `<button class="source-button" type="button" data-source="all" aria-selected="${state.source === "all"}">ทุกเว็บ <span>${total}</span></button>`,
+        ...sources.map(source => `
+          <button class="source-button" type="button" data-source="${escapeHtml(source)}" aria-selected="${state.source === source}">
+            ${escapeHtml(source)} <span>${counts[source]}</span>
+          </button>
+        `)
+      ].join("");
+    }
+
+    function renderMonthFilter() {
+      const baseEvents = monthFilterBaseEvents();
+      const counts = baseEvents.reduce((acc, event) => {
+        const key = monthKey(event.eventDate);
+        acc[key] = (acc[key] || 0) + 1;
+        return acc;
+      }, {});
+      if (state.month !== "all" && !counts[state.month]) counts[state.month] = 0;
+      const months = Object.keys(counts).sort();
+      const total = baseEvents.length;
+      const panel = document.querySelector("#monthFilterPanel");
+
+      panel.innerHTML = [
+        `<button class="source-button" type="button" data-month="all" aria-selected="${state.month === "all"}">ทุกเดือน <span>${total}</span></button>`,
+        ...months.map(key => `
+          <button class="source-button" type="button" data-month="${escapeHtml(key)}" aria-selected="${state.month === key}">
+            ${escapeHtml(shortMonthLabel(key))} <span>${counts[key]}</span>
+          </button>
+        `)
+      ].join("");
+    }
+
+    function renderHeroCovers() {
+      const panel = document.querySelector("#heroCovers");
+      const coverEvents = visibleEvents()
+        .filter(event => event.imageUrl && detailUrl(event))
+        .sort((a, b) => new Date(a.eventDate) - new Date(b.eventDate))
+        .slice(0, 4);
+
+      panel.innerHTML = coverEvents.map(event => `
+        <a class="hero-cover" href="${escapeHtml(detailUrl(event))}" target="_blank" rel="noopener noreferrer" aria-label="เปิดหน้าอ้างอิง ${escapeHtml(event.title)}">
+          <img src="${escapeHtml(event.imageUrl)}" alt="${escapeHtml(event.title)}" loading="lazy">
+        </a>
+      `).join("");
+    }
+
+    function openDetail(event) {
+      const backdrop = document.querySelector("#detailBackdrop");
+      const hero = document.querySelector("#detailHero");
+      const category = document.querySelector("#detailCategory");
+      const title = document.querySelector("#detailTitle");
+      const body = document.querySelector("#detailBody");
+
+      hero.className = `detail-hero ${event.category}`;
+      category.className = `badge ${event.category}`;
+      category.textContent = event.categoryLabel;
+      title.textContent = event.title;
+      body.innerHTML = `
+        <p>${escapeHtml(event.description || "รายละเอียดเพิ่มเติมจะอัปเดตจากเว็บต้นทางเมื่อมีข้อมูลล่าสุด")}</p>
+        <div class="detail-grid">
+          <div class="detail-item"><span>วันเปิดขาย</span><strong>${escapeHtml(formatSaleDate(event))}</strong></div>
+          <div class="detail-item"><span>วันจัดงาน</span><strong>${escapeHtml(formatDate(event.eventDate))}</strong></div>
+          <div class="detail-item"><span>สถานที่</span><strong>${escapeHtml(event.venue)}</strong></div>
+          <div class="detail-item"><span>ราคา</span><strong>${escapeHtml(priceLabel(event))}</strong></div>
+          <div class="detail-item"><span>เว็บต้นทาง</span><strong>${escapeHtml(event.source)}</strong></div>
+          <div class="detail-item"><span>สถานะบัตร</span><strong>${escapeHtml(statusLabel(event.status))}</strong></div>
+          <div class="detail-item"><span>ที่มาข้อมูล</span>${referenceMarkup(event)}</div>
+        </div>
+        <div class="detail-note">${escapeHtml(event.ticketNote || "ข้อมูลในเว็บนี้เป็นตัวช่วยรวมตาราง ควรตรวจสอบรายละเอียดและเงื่อนไขล่าสุดจากเว็บต้นทางก่อนซื้อบัตร")}</div>
+        <div class="detail-actions">
+          <button class="ghost-button" type="button" data-close-detail>ปิด</button>
+          ${detailAction(event)}
+        </div>
+      `;
+      backdrop.classList.add("show");
+      document.body.style.overflow = "hidden";
+    }
+
+    function closeDetail() {
+      document.querySelector("#detailBackdrop").classList.remove("show");
+      document.body.style.overflow = "";
+    }
+
+    function render() {
+      renderHeroCovers();
+      renderSourceFilter();
+      renderMonthFilter();
+      const filtered = getFilteredEvents();
+      const activeEvents = visibleEvents();
+      const grouped = filtered.reduce((acc, event) => {
+        const key = monthKey(event.eventDate);
+        acc[key] = acc[key] || [];
+        acc[key].push(event);
+        return acc;
+      }, {});
+      const monthText = state.month === "all" ? "ทุกเดือน" : monthLabel(state.month);
+      const sourceText = state.source === "all" ? "ทุกเว็บ" : state.source;
+      const categoryButton = document.querySelector(`.tab[data-category="${state.category}"]`);
+      const categoryText = categoryButton ? categoryButton.textContent : "ทั้งหมด";
+
+      document.querySelector("#eventList").innerHTML = Object.keys(grouped).sort().map(key => `
+        <section class="month-group">
+          <div class="month-head">
+            <h3>${monthLabel(key)}</h3>
+            <p>${grouped[key].length} งาน</p>
+          </div>
+          <div class="cards">${grouped[key].map(eventCard).join("")}</div>
+        </section>
+      `).join("");
+
+      document.querySelector("#resultSummary").innerHTML = `
+        <span>กำลังแสดง <strong>${filtered.length}</strong> จาก <strong>${activeEvents.length}</strong> งานที่ยังไม่ผ่านวันจัดงาน</span>
+        <span>${escapeHtml(monthText)} · ${escapeHtml(categoryText)} · ${escapeHtml(sourceText)}</span>
+      `;
+      document.querySelector("#emptyState").classList.toggle("show", filtered.length === 0);
+      document.querySelector("#totalEvents").textContent = activeEvents.length;
+      document.querySelector("#openSales").textContent = activeEvents.filter(event => event.status === "onsale").length;
+      document.querySelector("#upcomingSales").textContent = activeEvents.filter(event => event.status === "upcoming").length;
+      document.querySelector("#monthCount").textContent = [...new Set(activeEvents.map(event => monthKey(event.eventDate)))].length;
+    }
+
+    document.querySelectorAll(".tab").forEach(tab => {
+      tab.addEventListener("click", () => {
+        document.querySelectorAll(".tab").forEach(item => item.setAttribute("aria-selected", "false"));
+        tab.setAttribute("aria-selected", "true");
+        state.category = tab.dataset.category;
+        render();
+      });
+    });
+
+    document.querySelector("#searchInput").addEventListener("input", event => {
+      state.query = event.target.value;
+      render();
+    });
+
+    document.querySelector("#sourceFilterPanel").addEventListener("click", event => {
+      const button = event.target.closest("[data-source]");
+      if (!button) return;
+      state.source = button.dataset.source;
+      render();
+    });
+
+    document.querySelector("#monthFilterPanel").addEventListener("click", event => {
+      const button = event.target.closest("[data-month]");
+      if (!button) return;
+      state.month = button.dataset.month;
+      render();
+    });
+
+    document.querySelector("#eventList").addEventListener("click", event => {
+      const button = event.target.closest("[data-event-id]");
+      if (!button) return;
+      const selected = findEventById(button.dataset.eventId);
+      if (selected) openDetail(selected);
+    });
+
+    document.querySelector("#closeDetail").addEventListener("click", closeDetail);
+    document.querySelector("#detailBackdrop").addEventListener("click", event => {
+      if (event.target.id === "detailBackdrop" || event.target.hasAttribute("data-close-detail")) closeDetail();
+    });
+    document.addEventListener("keydown", event => {
+      if (event.key === "Escape") closeDetail();
+    });
+
+    async function bootstrap() {
+      events = await loadEvents();
+      populateFilters();
+      render();
+    }
+
+    bootstrap();
+  </script>
+</body>
+</html>
