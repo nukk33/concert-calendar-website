@@ -1,9 +1,4 @@
-+07:00",
-      "saleText": "ตรวจสอบสถานะขายบัตรบนเว็บต้นทาง",
-      "eventDate": "2026-09-06T18:00:00+07:00",
-      "price": "ดูราคาบนเว็บต้นทาง",
-      "status": "onsale",
-      "imageUrl": "https://tm-prod-event-files-v3.ticketmelon.com/fc4b82fc241611f1943101117567899b/poster/b18d7e6329ad11f1967801117567899b.png",
+s://tm-prod-event-files-v3.ticketmelon.com/fc4b82fc241611f1943101117567899b/poster/b18d7e6329ad11f1967801117567899b.png",
       "sourcePageUrl": "https://www.ticketmelon.com/viji/higedan",
       "url": "https://www.ticketmelon.com/viji/higedan",
       "description": "ข้อมูลจากหน้ารายการงานบน Ticketmelon",
@@ -47,7 +42,7 @@
       "sourcePageUrl": "https://www.thaiticketmajor.com/performance/",
       "description": "ข้อมูลจากหน้า ThaiTicketMajor หมวดการแสดง",
       "ticketNote": "ซื้อบัตร",
-      "imageUrl": "assets/performance-posters/ttm-performance-romeo-juliet-by-bolshoi-theatre-of-belarus.svg"
+      "imageUrl": "assets/ttm-posters/ttm-performance-romeo-juliet-by-bolshoi-theatre-of-belarus.svg"
     },
     {
       "id": "allticket-deaw-16-never-grow-up",
@@ -105,7 +100,7 @@
       "sourcePageUrl": "https://www.thaiticketmajor.com/performance/cinderella-by-bolshoi-theatre-of-belarus.html",
       "description": "ข้อมูลจากหน้า ThaiTicketMajor หมวดการแสดง",
       "ticketNote": "ซื้อบัตร",
-      "imageUrl": "assets/performance-posters/ttm-performance-cinderella-by-bolshoi-theatre-of-belarus.svg"
+      "imageUrl": "assets/ttm-posters/ttm-performance-cinderella-by-bolshoi-theatre-of-belarus.svg"
     },
     {
       "id": "ttm-performance-rite-by-deborah-colker-dance-company",
@@ -126,7 +121,7 @@
       "sourcePageUrl": "https://www.thaiticketmajor.com/performance/",
       "description": "ข้อมูลจากหน้า ThaiTicketMajor หมวดการแสดง",
       "ticketNote": "ซื้อบัตร",
-      "imageUrl": "assets/performance-posters/ttm-performance-rite-by-deborah-colker-dance-company.svg"
+      "imageUrl": "assets/ttm-posters/ttm-performance-rite-by-deborah-colker-dance-company.svg"
     },
     {
       "id": "lnt-reirie-1st-solo-live-in-bangkok",
@@ -168,7 +163,7 @@
       "sourcePageUrl": "https://www.thaiticketmajor.com/performance/",
       "description": "ข้อมูลจากหน้า ThaiTicketMajor หมวดการแสดง",
       "ticketNote": "ซื้อบัตร",
-      "imageUrl": "assets/performance-posters/ttm-performance-sadeck-berrabah-murmuration-level-2.svg"
+      "imageUrl": "assets/ttm-posters/ttm-performance-sadeck-berrabah-murmuration-level-2.svg"
     },
     {
       "id": "ttm-90s-2000s-piano-and-i-concert-grammy-songbook",
@@ -184,4 +179,5 @@
         "2026-09-19T18:00:00+07:00",
         "2026-09-20T18:00:00+07:00"
       ],
-      "price": "
+      "price": "ดูราคาบนเว็บต้นทาง",
+     

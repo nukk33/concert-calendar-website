@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="900" viewBox="0 0 1200 900">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#7c2d12" />
+      <stop offset="48%" stop-color="#b45309" />
+      <stop offset="100%" stop-color="#1f2937" />
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="900" fill="url(#bg)" />
+  <circle cx="1030" cy="160" r="170" fill="rgba(255,255,255,0.08)" />
+  <circle cx="180" cy="760" r="240" fill="rgba(255,255,255,0.05)" />
+  <text x="40" y="76" fill="#fde68a" font-family="Arial, sans-serif" font-size="26" font-weight="900" letter-spacing="3">THAILAND CONCERT CALENDAR</text>
+  <text x="40" y="116" fill="#ffedd5" font-family="Arial, sans-serif" font-size="28" font-weight="700">การแสดง • ThaiTicketMajor</text>
+  <text x="40" y="180" fill="#fff7ed" font-family="Arial, sans-serif" font-size="34" font-weight="800">Alice in</text>
+<text x="40" y="224" fill="#fff7ed" font-family="Arial, sans-serif" font-size="34" font-weight="800">Wonderland by</text>
+<text x="40" y="268" fill="#fff7ed" font-family="Arial, sans-serif" font-size="34" font-weight="800">Wings Show</text>
+<text x="40" y="312" fill="#fff7ed" font-family="Arial, sans-serif" font-size="34" font-weight="800">Production</text>
+  <text x="40" y="760" fill="#ffffff" font-family="Arial, sans-serif" font-size="28" font-weight="700">ศูนย์วัฒนธรรมแห่งประเทศไทย หอประชุมใหญ่</text>
+  <text x="40" y="812" fill="#fed7aa" font-family="Arial, sans-serif" font-size="24" font-weight="700">ซื้อบัตร</text>
+  <text x="40" y="860" fill="#fde68a" font-family="Arial, sans-serif" font-size="22" font-weight="700">Poster placeholder generated from event metadata</text>
+</svg>
