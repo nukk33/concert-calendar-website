@@ -45,6 +45,14 @@ const imageOverrides={
   'ttm-performance-pantomime-in-bangkok-18':'https://www.thaiticketmajor.com/img_poster/prefix_1/0774/6774/pantomime-in-bangkok-18-6a2a36692e15a-l.png',
   'ttm-performance-2026-byeonwooseok-asia-fanmeeting-tour-the-secret-library-in-bangkok':'https://www.thaiticketmajor.com/img_poster/prefix_1/0778/6778/2026-byeonwooseok-asia-fanmeeting-tour-the-secret-library-in-bangkok-6a4f5509455a2-l.png'
 };
+const categoryOverrides={
+  'ttm-feel-fan-fun-party-concert':{category:'thai',categoryLabel:'ไทย'},
+  'ttm-nuvoriginal':{category:'thai',categoryLabel:'ไทย'},
+  'ttm-junior-mark-sunnymoon-concert':{category:'thai',categoryLabel:'ไทย'},
+  'ttm-no1-supernova':{category:'thai',categoryLabel:'ไทย'},
+  'ttm-b-day-sbz-uncut-live-reel-01':{category:'thai',categoryLabel:'ไทย'},
+  'ttm-remaster-concert':{category:'thai',categoryLabel:'ไทย'}
+};
 const extraEvents=[{
   id:'ttm-performance-drama-queens-the-musical',
   title:'เมืองมารยา เดอะมิวสิคัล',
@@ -73,7 +81,7 @@ function future(e){let ds=e.eventDates||[e.eventDate];return ds.some(value=>{let
 function fmt(d){return new Intl.DateTimeFormat('th-TH',{day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'}).format(new Date(d)).replace(' น.','')}
 function dateText(e){let ds=e.eventDates||[e.eventDate];return ds.map(fmt).join(' / ')}
 function price(e){let p=String(e.price||'ดูราคาบนเว็บต้นทาง');if(!/\d/.test(p))return p;if(/บาท|THB|฿|Early Bird|Pre[- ]?Sale|Pre[- ]?Early Bird|Live Streaming/i.test(p))return p;return `เริ่ม ${p} บาท`}
-function withImageOverrides(events){return events.map(e=>imageOverrides[e.id]?{...e,imageUrl:imageOverrides[e.id]}:e)}
+function applyOverrides(events){return events.map(e=>({...e,...(categoryOverrides[e.id]||{}),...(imageOverrides[e.id]?{imageUrl:imageOverrides[e.id]}:{})}))}
 function mergeDuplicateRuns(events){let byKey=new Map(), out=[];for(let event of events){let baseTitle=event.title.replace(/\s+-\s+The\s+(First|Second|Third|Fourth)\s+Night\b/ig,'').trim();let key=[event.source,baseTitle,event.venue].join('|').toLowerCase();if(!byKey.has(key)){let copy={...event,title:baseTitle,eventDates:[event.eventDate]};byKey.set(key,copy);out.push(copy);continue}let target=byKey.get(key);target.eventDates=[...new Set([...(target.eventDates||[target.eventDate]),event.eventDate])].sort();target.description=target.description||event.description;target.ticketNote=target.ticketNote||event.ticketNote}return out}
 function matchQuery(e){let q=state.q.toLowerCase().trim();return !q||[e.title,e.venue,e.source,e.categoryLabel].join(' ').toLowerCase().includes(q)}
 function visible(){return all.filter(future).filter(matchQuery).filter(e=>state.cat==='all'||e.category===state.cat).filter(e=>state.source==='all'||e.source===state.source).filter(e=>state.month==='all'||monthKey(primaryDate(e))===state.month).sort((a,b)=>new Date(primaryDate(a))-new Date(primaryDate(b)))}
@@ -85,7 +93,7 @@ function groupedCards(items){if(state.month!=='all')return items.map(card).join(
 function render(){renderFilters();let items=visible();$('#grid').innerHTML=groupedCards(items);$('#summary').innerHTML=`กำลังแสดง <b>${items.length}</b> จาก <b>${all.filter(future).length}</b> งานที่ยังไม่ผ่านวันจัดงาน`;$('#empty').classList.toggle('show',!items.length)}
 document.body.addEventListener('click',e=>{let b=e.target.closest('.chip');if(!b)return;['cat','source','month'].forEach(k=>{if(b.dataset[k])state[k]=b.dataset[k]});render()});
 $('#q').addEventListener('input',e=>{state.q=e.target.value;render()});
-(async()=>{try{let txt=(await Promise.all(parts.map(p=>fetch(p).then(r=>r.text())))).join('');all=mergeDuplicateRuns(withImageOverrides([...(JSON.parse(txt).events||[]),...extraEvents]));state.month=`${new Date().getFullYear()}-${String(new Date().getMonth()+1).padStart(2,'0')}`;render()}catch(e){$('#summary').textContent='โหลดข้อมูลไม่สำเร็จ';console.error(e)}})();
+(async()=>{try{let txt=(await Promise.all(parts.map(p=>fetch(p).then(r=>r.text())))).join('');all=mergeDuplicateRuns(applyOverrides([...(JSON.parse(txt).events||[]),...extraEvents]));state.month=`${new Date().getFullYear()}-${String(new Date().getMonth()+1).padStart(2,'0')}`;render()}catch(e){$('#summary').textContent='โหลดข้อมูลไม่สำเร็จ';console.error(e)}})();
 </script>
 </body>
 </html>
