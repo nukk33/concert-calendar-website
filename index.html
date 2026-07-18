@@ -28,6 +28,21 @@
 const parts=Array.from({length:12},(_,i)=>i+1).map(n=>`data/real-events-${String(n).padStart(2,'0')}.jsonpart`);
 const thMonths=['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
 const state={cat:'all',source:'all',month:'all',q:''};let all=[];
+const imageOverrides={
+  'ttm-performance-bangkok-s-28th-international-festival-of-dance-music':'https://www.thaiticketmajor.com/bangkokfestivals/assets/img/hb.jpg?v=2026',
+  'ttm-performance-new-york-city-opera-opera-goes-to-hollywood':'https://www.thaiticketmajor.com/img_poster/prefix_1/0718/6718/new-york-city-opera-opera-goes-to-hollywood-69fb059e24288-l.png',
+  'ttm-performance-romeo-juliet-by-bolshoi-theatre-of-belarus':'https://www.thaiticketmajor.com/img_poster/prefix_1/0719/6719/romeo-and-juliet-bolshoi-theatre-of-belarus-69fb06fc4707b-l.png',
+  'ttm-performance-cinderella-by-bolshoi-theatre-of-belarus':'https://www.thaiticketmajor.com/img_poster/prefix_1/0720/6720/cinderella-bolshoi-theatre-of-belarus-69fb07fc93a59-l.png',
+  'ttm-performance-rite-by-deborah-colker-dance-company':'https://www.thaiticketmajor.com/img_poster/prefix_1/0721/6721/rite-deborah-colker-dance-company-69fb0902dbfd1-l.png',
+  'ttm-performance-sadeck-berrabah-murmuration-level-2':'https://www.thaiticketmajor.com/img_poster/prefix_1/0722/6722/sadeck-berrabah-murmuration-level-2-69fb09f4e9786-l.png',
+  'ttm-performance-alice-in-wonderland-by-wings-show-production':'https://www.thaiticketmajor.com/img_poster/prefix_1/0723/6723/alice-in-wonderland-by-wings-show-production-6a3a05cfed168-l.png',
+  'ttm-performance-the-great-gatsby-by-enrique-gasa-valga-dance-company':'https://www.thaiticketmajor.com/img_poster/prefix_1/0724/6724/the-great-gatsby-enrique-gasa-valga-dance-company-69fb0c5c220b0-l.png',
+  'ttm-performance-coco-chanel-by-national-theatre-brno':'https://www.thaiticketmajor.com/img_poster/prefix_1/0725/6725/coco-chanel-national-theatre-brno-69fb0d6790174-l.png',
+  'ttm-performance-la-traviata-by-helikon-opera':'https://www.thaiticketmajor.com/img_poster/prefix_1/0726/6726/la-traviata-helikon-opera-69fb0e9294bfd-l.png',
+  'ttm-performance-madama-butterfly-by-helikon-opera':'https://www.thaiticketmajor.com/img_poster/prefix_1/0727/6727/madama-butterfly-helikon-opera-69fb0fbaa9b5e-l.png',
+  'ttm-performance-the-pygmalion-effect-by-eifman-ballet':'https://www.thaiticketmajor.com/img_poster/prefix_1/0728/6728/the-pygmalion-effect-eifman-ballet-69fb10a64164a-l.png',
+  'ttm-performance-russian-hamlet-by-eifman-ballet':'https://www.thaiticketmajor.com/img_poster/prefix_1/0729/6729/russian-hamlet-eifman-ballet-69fb114edb476-l.png'
+};
 const $=s=>document.querySelector(s), esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 function monthKey(d){return d.slice(0,7)}
 function monthLabel(k){return thMonths[Number(k.slice(5,7))-1]||k}
@@ -37,6 +52,7 @@ function future(e){let ds=e.eventDates||[e.eventDate];return ds.some(value=>{let
 function fmt(d){return new Intl.DateTimeFormat('th-TH',{day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'}).format(new Date(d)).replace(' น.','')}
 function dateText(e){let ds=e.eventDates||[e.eventDate];return ds.map(fmt).join(' / ')}
 function price(e){let p=String(e.price||'ดูราคาบนเว็บต้นทาง');if(!/\d/.test(p))return p;if(/บาท|THB|฿|Early Bird|Pre[- ]?Sale|Pre[- ]?Early Bird|Live Streaming/i.test(p))return p;return `เริ่ม ${p} บาท`}
+function withImageOverrides(events){return events.map(e=>imageOverrides[e.id]?{...e,imageUrl:imageOverrides[e.id]}:e)}
 function mergeDuplicateRuns(events){let byKey=new Map(), out=[];for(let event of events){let baseTitle=event.title.replace(/\s+-\s+The\s+(First|Second|Third|Fourth)\s+Night\b/ig,'').trim();let key=[event.source,baseTitle,event.venue].join('|').toLowerCase();if(!byKey.has(key)){let copy={...event,title:baseTitle,eventDates:[event.eventDate]};byKey.set(key,copy);out.push(copy);continue}let target=byKey.get(key);target.eventDates=[...new Set([...(target.eventDates||[target.eventDate]),event.eventDate])].sort();target.description=target.description||event.description;target.ticketNote=target.ticketNote||event.ticketNote}return out}
 function matchQuery(e){let q=state.q.toLowerCase().trim();return !q||[e.title,e.venue,e.source,e.categoryLabel].join(' ').toLowerCase().includes(q)}
 function visible(){return all.filter(future).filter(matchQuery).filter(e=>state.cat==='all'||e.category===state.cat).filter(e=>state.source==='all'||e.source===state.source).filter(e=>state.month==='all'||monthKey(primaryDate(e))===state.month).sort((a,b)=>new Date(primaryDate(a))-new Date(primaryDate(b)))}
@@ -48,7 +64,7 @@ function groupedCards(items){if(state.month!=='all')return items.map(card).join(
 function render(){renderFilters();let items=visible();$('#grid').innerHTML=groupedCards(items);$('#summary').innerHTML=`กำลังแสดง <b>${items.length}</b> จาก <b>${all.filter(future).length}</b> งานที่ยังไม่ผ่านวันจัดงาน`;$('#empty').classList.toggle('show',!items.length)}
 document.body.addEventListener('click',e=>{let b=e.target.closest('.chip');if(!b)return;['cat','source','month'].forEach(k=>{if(b.dataset[k])state[k]=b.dataset[k]});render()});
 $('#q').addEventListener('input',e=>{state.q=e.target.value;render()});
-(async()=>{try{let txt=(await Promise.all(parts.map(p=>fetch(p).then(r=>r.text())))).join('');all=mergeDuplicateRuns(JSON.parse(txt).events||[]);state.month=`${new Date().getFullYear()}-${String(new Date().getMonth()+1).padStart(2,'0')}`;render()}catch(e){$('#summary').textContent='โหลดข้อมูลไม่สำเร็จ';console.error(e)}})();
+(async()=>{try{let txt=(await Promise.all(parts.map(p=>fetch(p).then(r=>r.text())))).join('');all=mergeDuplicateRuns(withImageOverrides(JSON.parse(txt).events||[]));state.month=`${new Date().getFullYear()}-${String(new Date().getMonth()+1).padStart(2,'0')}`;render()}catch(e){$('#summary').textContent='โหลดข้อมูลไม่สำเร็จ';console.error(e)}})();
 </script>
 </body>
 </html>
