@@ -45,6 +45,25 @@ const imageOverrides={
   'ttm-performance-pantomime-in-bangkok-18':'https://www.thaiticketmajor.com/img_poster/prefix_1/0774/6774/pantomime-in-bangkok-18-6a2a36692e15a-l.png',
   'ttm-performance-2026-byeonwooseok-asia-fanmeeting-tour-the-secret-library-in-bangkok':'https://www.thaiticketmajor.com/img_poster/prefix_1/0778/6778/2026-byeonwooseok-asia-fanmeeting-tour-the-secret-library-in-bangkok-6a4f5509455a2-l.png'
 };
+const extraEvents=[{
+  id:'ttm-performance-drama-queens-the-musical',
+  title:'เมืองมารยา เดอะมิวสิคัล',
+  category:'stage',
+  categoryLabel:'ละครเวที',
+  source:'ThaiTicketMajor',
+  venue:'เมืองไทยรัชดาลัย เธียเตอร์',
+  saleDate:'2026-07-06T10:00:00+07:00',
+  saleText:'ซื้อบัตร',
+  eventDate:'2026-08-17T19:30:00+07:00',
+  eventDates:['2026-08-17T19:30:00+07:00','2026-09-27T14:00:00+07:00'],
+  price:'800 - 4,500',
+  status:'onsale',
+  url:'https://www.thaiticketmajor.com/performance/DramaQueens-TheMusical.html',
+  sourcePageUrl:'https://www.thaiticketmajor.com/performance/DramaQueens-TheMusical.html',
+  imageUrl:'https://www.thaiticketmajor.com/img_poster/prefix_1/0780/6780/DramaQueens-TheMusical-6a439b5e86b42-l.jpg',
+  description:'ข้อมูลจากหน้า ThaiTicketMajor หมวดละครเวที',
+  ticketNote:'ซื้อบัตร'
+}];
 const $=s=>document.querySelector(s), esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 function monthKey(d){return d.slice(0,7)}
 function monthLabel(k){return thMonths[Number(k.slice(5,7))-1]||k}
@@ -66,7 +85,7 @@ function groupedCards(items){if(state.month!=='all')return items.map(card).join(
 function render(){renderFilters();let items=visible();$('#grid').innerHTML=groupedCards(items);$('#summary').innerHTML=`กำลังแสดง <b>${items.length}</b> จาก <b>${all.filter(future).length}</b> งานที่ยังไม่ผ่านวันจัดงาน`;$('#empty').classList.toggle('show',!items.length)}
 document.body.addEventListener('click',e=>{let b=e.target.closest('.chip');if(!b)return;['cat','source','month'].forEach(k=>{if(b.dataset[k])state[k]=b.dataset[k]});render()});
 $('#q').addEventListener('input',e=>{state.q=e.target.value;render()});
-(async()=>{try{let txt=(await Promise.all(parts.map(p=>fetch(p).then(r=>r.text())))).join('');all=mergeDuplicateRuns(withImageOverrides(JSON.parse(txt).events||[]));state.month=`${new Date().getFullYear()}-${String(new Date().getMonth()+1).padStart(2,'0')}`;render()}catch(e){$('#summary').textContent='โหลดข้อมูลไม่สำเร็จ';console.error(e)}})();
+(async()=>{try{let txt=(await Promise.all(parts.map(p=>fetch(p).then(r=>r.text())))).join('');all=mergeDuplicateRuns(withImageOverrides([...(JSON.parse(txt).events||[]),...extraEvents]));state.month=`${new Date().getFullYear()}-${String(new Date().getMonth()+1).padStart(2,'0')}`;render()}catch(e){$('#summary').textContent='โหลดข้อมูลไม่สำเร็จ';console.error(e)}})();
 </script>
 </body>
 </html>
